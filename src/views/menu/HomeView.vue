@@ -1,0 +1,21 @@
+<template>
+  <div class="home">
+    <h1>Home</h1>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({
+  name: "HomeView",
+  components: {},
+});
+</script>
+
+<style lang="scss" scoped>
+.home {
+  height: inherit;
+  background-color: white;
+}
+</style>
