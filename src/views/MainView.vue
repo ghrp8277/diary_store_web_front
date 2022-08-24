@@ -34,9 +34,11 @@
     </header>
     <!-- 본문 내용 -->
     <main :class="{ 'box-show': isShow }">
-      <message-box class="message-box" v-if="isShow" />
       <router-view />
     </main>
+    <!-- 메시지 박스 -->
+    <div :class="{ 'layer-dimmed': isShow }"></div>
+    <message-box v-if="isShow" />
   </div>
 </template>
 
@@ -124,10 +126,6 @@ li {
   list-style: none;
 }
 
-// .router-link-active > a {
-//   border-bottom: 2px solid white;
-// }
-
 .right-items li::after {
   content: '';
   display: block;
@@ -142,9 +140,18 @@ li {
   width: 100%;
 }
 
-.box-show:not(.message-box) {
-  opacity: 0.46;
+.layer-dimmed {
+  overflow: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.33);
+  z-index: 1000;
+}
 
+.box-show {
   pointer-events: none;
   // 드래그 금지
   -webkit-user-select: none;

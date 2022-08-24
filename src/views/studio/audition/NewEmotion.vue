@@ -85,18 +85,12 @@
       <div class="image-files">
         <div class="file-box" v-for="(image, index) in imagesInfo" :key="index">
           <div class="file-count">{{ image.index }}</div>
-          <!-- <font-awesome-icon
+          <font-awesome-icon
+            class="file-icon"
+            v-if="image.imageInfo.length == 0"
             icon="fa-image"
-            style="
-              visibility: visible;
-              height: 35px;
-              position: relative;
-              color: gainsboro;
-              left: 48px;
-              top: 10px;
-            "
-          /> -->
-          <img class="img-emoji" :src="image.imageInfo" />
+          />
+          <img v-else class="img-emoji" :src="image.imageInfo" />
           <label class="btn-file"
             >찾아보기
             <input
@@ -134,20 +128,42 @@ export default defineComponent({
 
         const size = image.size;
 
+        // 파일 크기 체크
         if (1024 * 150 < size) {
           store.messageBoxSetState(
             true,
-            '해당 파일은 150kb 용량을 초과하였습니다.'
+            `${image.name} 이미지 크기가 너무 큽니다. 최대 이미지 크기는 150kb 입니다.`,
           );
         } else {
           reader.readAsDataURL(image);
           reader.onload = (e) => {
-            if (e.target) {
+            if (e.target && e.target.DONE) {
+              let isFileSizeCheck = false;
+              let img = new Image();
+              img.src = e.target.result as string;
+
+              img.onload = function () {
+                const width = img.width;
+                const height = img.height;
+
+                // 파일 사이즈 체크
+                if (width == 360 && height == 360) {
+                  isFileSizeCheck = true;
+                } else {
+                  store.messageBoxSetState(
+                    true,
+                    '이미지 사이즈를 확인해주세요.',
+                  );
+                }
+              };
+
               const imageInfo = imagesInfo.find((image) => {
                 return image.index.toString() == name;
               });
 
-              if (imageInfo) imageInfo.imageInfo = e.target.result as string;
+              if (imageInfo && isFileSizeCheck) {
+                imageInfo.imageInfo = e.target.result as string;
+              }
             }
           };
         }
@@ -371,19 +387,29 @@ input[type='file'] {
   background-color: rgba(#edeff4, 0.1);
 
   position: relative;
-
-  // visibility: hidden;
 }
 
 .file-box:hover {
   background-color: rgba(#717274, 0.5);
 
-  visibility: visible;
+  .btn-file {
+    visibility: visible;
+  }
+}
+
+.file-icon {
+  height: 35px;
+  position: relative;
+  color: gainsboro;
+  left: 45px;
 }
 
 .img-emoji {
   width: 100%;
-  height: 50px;
+  height: 100%;
+
+  position: absolute;
+  top: 0;
 }
 
 .file-count {
@@ -394,8 +420,6 @@ input[type='file'] {
   font-weight: normal;
 
   color: #000;
-
-  visibility: visible;
 }
 
 .btn-file {
@@ -413,6 +437,8 @@ input[type='file'] {
   top: 100%;
   left: 50%;
   margin: -40px 0 0 -45px;
+
+  visibility: hidden;
 }
 
 .btn-submit {
