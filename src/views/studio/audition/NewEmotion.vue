@@ -115,10 +115,12 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, reactive } from '@vue/composition-api';
+import { useStore } from '@/services/pinia';
 
 export default defineComponent({
   name: 'NewEmotionView',
   setup() {
+    const store = useStore();
     const imagesInfo = reactive<{ index: number; imageInfo: string }[]>([]);
 
     // 이미지 업로드
@@ -133,7 +135,10 @@ export default defineComponent({
         const size = image.size;
 
         if (1024 * 150 < size) {
-          alert('해당 파일은 150kb 용량을 초과하였습니다.');
+          store.messageBoxSetState(
+            true,
+            '해당 파일은 150kb 용량을 초과하였습니다.'
+          );
         } else {
           reader.readAsDataURL(image);
           reader.onload = (e) => {

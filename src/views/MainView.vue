@@ -33,8 +33,8 @@
       </nav>
     </header>
     <!-- 본문 내용 -->
-    <main>
-      <message-box />
+    <main :class="{ 'box-show': isShow }">
+      <message-box class="message-box" v-if="isShow" />
       <router-view />
     </main>
   </div>
@@ -42,17 +42,25 @@
 
 <script lang="ts">
 import MessageBox from '@/components/MessageBox.vue';
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, computed } from '@vue/composition-api';
+import { useStore } from '@/services/pinia';
 
 export default defineComponent({
   name: 'MainView',
   components: { MessageBox },
+  setup() {
+    const store = useStore();
+    const isShow = computed(() => store.messageBoxState.isMessageBoxShow);
+
+    return {
+      isShow,
+    };
+  },
 });
 </script>
 
 <style lang="scss" scoped>
 .container {
-  background-color: #fcfcfc;
   height: 100%;
 }
 
@@ -132,5 +140,16 @@ li {
 
 .right-items li:hover::after {
   width: 100%;
+}
+
+.box-show:not(.message-box) {
+  opacity: 0.46;
+
+  pointer-events: none;
+  // 드래그 금지
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 </style>

@@ -2,6 +2,7 @@ module.exports = {
   root: true,
   env: {
     node: true,
+    'vue/setup-compiler-macros': true,
   },
   extends: [
     'plugin:vue/essential',
@@ -19,11 +20,12 @@ module.exports = {
       'error',
       {
         endOfLine: 'auto',
-        printWidth: 80,
-        trailingComma: 'all',
         tabWidth: 2,
-        singleQuote: true,
         semi: true,
+        singleQuote: true,
+        trailingComma: 'es5',
+        useTabs: false,
+        printWidth: 80,
       },
     ],
   },
