@@ -21,10 +21,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
-  name: "UserCard",
+  name: 'UserCard',
   setup() {
     return {};
   },
@@ -57,7 +57,7 @@ export default defineComponent({
   font-weight: 500;
 
   line-height: 19px;
-  font-family: "NotoSans-Light";
+  font-family: 'NotoSans-Light';
 }
 
 .logout {

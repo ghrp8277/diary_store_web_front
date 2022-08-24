@@ -83,36 +83,29 @@
       </div>
 
       <div class="image-files">
-        <tbody>
-          <tr v-for="n in 3" :key="n">
-            <td v-for="i in 6" :key="i">
-              <div class="file-box">
-                <div class="file-count">{{ imagesInfo[i - 1].index }}</div>
-
-                <!-- <font-awesome-icon
-                  icon="fa-image"
-                  style="
-                    visibility: visible;
-                    height: 35px;
-                    position: relative;
-                    color: gainsboro;
-                    left: 48px;
-                    top: 10px;
-                  "
-                /> -->
-                <!-- <img class="img-emoji" :src="imagePath" /> -->
-                <label class="btn-file"
-                  >찾아보기
-                  <input
-                    type="file"
-                    name="image"
-                    accept="image/*"
-                    @change="uploadImage"
-                /></label>
-              </div>
-            </td>
-          </tr>
-        </tbody>
+        <div class="file-box" v-for="(image, index) in imagesInfo" :key="index">
+          <div class="file-count">{{ image.index }}</div>
+          <!-- <font-awesome-icon
+            icon="fa-image"
+            style="
+              visibility: visible;
+              height: 35px;
+              position: relative;
+              color: gainsboro;
+              left: 48px;
+              top: 10px;
+            "
+          /> -->
+          <img class="img-emoji" :src="image.imageInfo" />
+          <label class="btn-file"
+            >찾아보기
+            <input
+              type="file"
+              :name="image.index"
+              accept="image/*"
+              @change="uploadImage"
+          /></label>
+        </div>
       </div>
     </div>
 
@@ -121,26 +114,38 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive } from "@vue/composition-api";
+import { defineComponent, onMounted, reactive } from '@vue/composition-api';
 
 export default defineComponent({
-  name: "NewEmotionView",
+  name: 'NewEmotionView',
   setup() {
     const imagesInfo = reactive<{ index: number; imageInfo: string }[]>([]);
 
+    // 이미지 업로드
     const uploadImage = (e: InputEvent) => {
       const target = e.target as HTMLInputElement;
 
       if (target.files) {
+        const name = target.name;
         const image = target.files[0];
         const reader = new FileReader();
 
-        reader.readAsDataURL(image);
-        reader.onload = (e) => {
-          if (e.target) {
-            e.target.result as string;
-          }
-        };
+        const size = image.size;
+
+        if (1024 * 150 < size) {
+          alert('해당 파일은 150kb 용량을 초과하였습니다.');
+        } else {
+          reader.readAsDataURL(image);
+          reader.onload = (e) => {
+            if (e.target) {
+              const imageInfo = imagesInfo.find((image) => {
+                return image.index.toString() == name;
+              });
+
+              if (imageInfo) imageInfo.imageInfo = e.target.result as string;
+            }
+          };
+        }
       }
     };
 
@@ -149,7 +154,7 @@ export default defineComponent({
       for (let i = 0; i < 18; i++) {
         imagesInfo.push({
           index: i + 1,
-          imageInfo: "",
+          imageInfo: '',
         });
       }
     });
@@ -247,7 +252,7 @@ textarea {
 
 .text-count {
   color: #666;
-  font-family: "ht_r";
+  font-family: 'ht_r';
   font-size: 11px;
 
   position: relative;
@@ -320,7 +325,7 @@ select:-moz-focusring {
 }
 
 .emph-guide:not(.first-emph)::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 4px;
   left: 0;
@@ -335,7 +340,7 @@ em {
 }
 
 // 이미지 파일들
-input[type="file"] {
+input[type='file'] {
   display: none;
   cursor: pointer;
 
@@ -347,7 +352,9 @@ input[type="file"] {
 }
 
 .image-files {
-  display: table;
+  display: grid;
+
+  grid-template-columns: repeat(6, 1fr);
 }
 
 .file-box {
@@ -357,6 +364,8 @@ input[type="file"] {
   border-bottom: 1px solid #e4e4e4;
 
   background-color: rgba(#edeff4, 0.1);
+
+  position: relative;
 
   // visibility: hidden;
 }
@@ -395,9 +404,10 @@ input[type="file"] {
 
   cursor: pointer;
 
-  // position: relative;
-  // bottom: -40px;
-  // left: -10px;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin: -40px 0 0 -45px;
 }
 
 .btn-submit {

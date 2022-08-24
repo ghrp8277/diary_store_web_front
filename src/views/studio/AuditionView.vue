@@ -42,15 +42,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-import router from "@/router";
+import { defineComponent } from '@vue/composition-api';
+import router from '@/router';
 
 export default defineComponent({
-  name: "AuditionView",
+  name: 'AuditionView',
   setup() {
     const submit = () => {
       router.push({
-        name: "emotion",
+        name: 'emotion',
       });
     };
     return {
@@ -141,7 +141,7 @@ dd {
 .list-guide {
   overflow: hidden;
   border: 1px solid #e0e0e0;
-  font-family: "NotoSans-DemiLight";
+  font-family: 'NotoSans-DemiLight';
 }
 
 .txt-guide {

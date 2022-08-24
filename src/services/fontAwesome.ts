@@ -3,9 +3,10 @@ import {
   faLightbulb,
   faSmile,
   faImage,
-} from "@fortawesome/free-solid-svg-icons";
-import { library } from "@fortawesome/fontawesome-svg-core";
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core';
 
-library.add(faClipboard, faLightbulb, faSmile, faImage);
+library.add(faClipboard, faLightbulb, faSmile, faImage, faXmark);
 
 export default library;

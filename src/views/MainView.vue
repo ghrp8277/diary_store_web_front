@@ -34,23 +34,25 @@
     </header>
     <!-- 본문 내용 -->
     <main>
+      <message-box />
       <router-view />
     </main>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
+import MessageBox from '@/components/MessageBox.vue';
+import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
-  name: "MainView",
-  components: {},
+  name: 'MainView',
+  components: { MessageBox },
 });
 </script>
 
 <style lang="scss" scoped>
 .container {
-  // background-color: rgb(45, 46, 50);
+  background-color: #fcfcfc;
   height: 100%;
 }
 
@@ -64,8 +66,8 @@ header {
 }
 
 main {
-  min-width: 1100px;
-  background-color: #fcfcfc;
+  width: 1100px;
+  margin: 0 auto;
 
   height: 100%;
 
@@ -119,7 +121,7 @@ li {
 // }
 
 .right-items li::after {
-  content: "";
+  content: '';
   display: block;
   width: 0;
   height: 2px;

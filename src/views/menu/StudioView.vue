@@ -7,11 +7,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-import UserCard from "@/components/UserCard.vue";
+import { defineComponent } from '@vue/composition-api';
+import UserCard from '@/components/UserCard.vue';
 
 export default defineComponent({
-  name: "StudioView",
+  name: 'StudioView',
   components: {
     UserCard,
   },
@@ -22,9 +22,7 @@ export default defineComponent({
 .studio {
   display: grid;
 
-  grid-template-columns: 1fr 3fr;
-
-  background-color: #fcfcfc;
+  grid-template-columns: minmax(280px, 1fr) 3fr;
 }
 
 .studio > div {
