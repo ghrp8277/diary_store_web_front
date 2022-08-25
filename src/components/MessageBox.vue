@@ -24,9 +24,7 @@ export default defineComponent({
   name: 'MessageBox',
   setup() {
     const store = useStore();
-    const closeBox = () => {
-      store.messageBoxSetState(false);
-    };
+    const closeBox = computed(() => store.messageBoxState.confirm);
     const message = computed(() => store.messageBoxState.message);
     return { closeBox, message };
   },

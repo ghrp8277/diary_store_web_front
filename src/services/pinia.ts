@@ -5,12 +5,20 @@ export const useStore = defineStore('main', {
     messageBoxState: {
       isMessageBoxShow: false,
       message: '',
+      confirm: null as unknown,
     },
   }),
   actions: {
-    messageBoxSetState(isShow: boolean, message = '') {
+    messageBoxSetState(
+      isShow: boolean,
+      message = '',
+      confirm = () => {
+        this.messageBoxState.isMessageBoxShow = isShow;
+      },
+    ) {
       this.messageBoxState.isMessageBoxShow = isShow;
       this.messageBoxState.message = message;
+      this.messageBoxState.confirm = confirm;
     },
   },
 });

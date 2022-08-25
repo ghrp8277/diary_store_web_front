@@ -7,180 +7,239 @@
       </span>
     </h1>
 
-    <form class="new-form">
-      <strong class="form-title">이모티콘 정보</strong>
+    <form
+      class="new-form"
+      @submit.prevent="submit"
+      enctype="multipart/form-data"
+    >
+      <div class="form-1">
+        <strong class="form-title">이모티콘 정보</strong>
 
-      <div class="form-item">
-        <label for="emoji-name">이모티콘 상품명 <span>●</span></label>
-        <input
-          id="emoji-name"
-          type="text"
-          placeholder="상품명을 2~22자 내로 입력해 주세요."
-        />
-      </div>
-
-      <div class="form-item">
-        <label for="emoji-category">이모티콘 카테고리 <span>●</span></label>
-
-        <select id="emoji-category" name="category">
-          <option value="" disabled selected>카테고리 선택</option>
-          <option value="animal">동물</option>
-          <option value="character">인물</option>
-          <option value="illustration">일러스트</option>
-        </select>
-      </div>
-
-      <div class="form-item">
-        <label for="emoji-tag">이모티콘 태그<span>●</span></label>
-        <input
-          id="emoji-tag"
-          type="text"
-          placeholder="태그를 1~15자 내로 입력해 주세요."
-          disabled
-        />
-      </div>
-
-      <div class="form-item">
-        <label for="emoji-tag">작가명<span>●</span></label>
-        <input
-          id="emoji-tag"
-          type="text"
-          placeholder="[국문] 작가명을 한글 1~15자 내로 입력해 주세요."
-        />
-      </div>
-
-      <div class="form-item">
-        <label for="emoji-comment">이모티콘 설명<span>●</span></label>
-        <textarea
-          id="emoji-comment"
-          cols="50"
-          rows="5"
-          placeholder="이모티콘 제작 컨셉 혹은 캐릭터에 대한 설명을 작성해 주세요."
-        ></textarea>
-        <!-- <div class="text-count"><span>0</span>/200자</div> -->
-      </div>
-      <div class="text-count"><span>0</span>/200자</div>
-    </form>
-
-    <div class="new-form">
-      <strong class="form-title"
-        >이모티콘 시안<em class="em-info" style="font-size: 20px"
-          >(필수)</em
-        ></strong
-      >
-
-      <div class="info-design">
-        <span class="txt-guide" style="margin-left: -23px"
-          >이미지 형식 :
-          <em class="emph-guide first-emph">PNG(배경투명, 18종)</em></span
-        >
-        <span class="txt-guide"
-          >이미지 개수 : <em class="emph-guide">총 18종 필수</em></span
-        >
-        <span class="txt-guide"
-          >이미지 사이즈 : <em class="emph-guide">360X360(px)</em></span
-        >
-      </div>
-
-      <div class="image-files">
-        <div class="file-box" v-for="(image, index) in imagesInfo" :key="index">
-          <div class="file-count">{{ image.index }}</div>
-          <font-awesome-icon
-            class="file-icon"
-            v-if="image.imageInfo.length == 0"
-            icon="fa-image"
+        <div class="form-item">
+          <label for="product-name">이모티콘 상품명 <span>●</span></label>
+          <input
+            id="product-name"
+            name="product_name"
+            type="text"
+            placeholder="상품명을 2~22자 내로 입력해 주세요."
           />
-          <img v-else class="img-emoji" :src="image.imageInfo" />
-          <label class="btn-file"
-            >찾아보기
-            <input
-              type="file"
-              :name="image.index"
-              accept="image/*"
-              @change="uploadImage"
-          /></label>
+        </div>
+
+        <div class="form-item">
+          <label for="category">이모티콘 카테고리 <span>●</span></label>
+
+          <select id="category" name="category">
+            <option value="" disabled selected>카테고리 선택</option>
+            <option value="animal">동물</option>
+            <option value="character">인물</option>
+            <option value="illustration">일러스트</option>
+          </select>
+        </div>
+
+        <div class="form-item">
+          <label for="tag">이모티콘 태그<span>●</span></label>
+          <input
+            id="tag"
+            name="tag"
+            type="text"
+            placeholder="태그를 1~15자 내로 입력해 주세요."
+          />
+        </div>
+
+        <div class="form-item">
+          <label for="author-name">작가명<span>●</span></label>
+          <input
+            id="author-name"
+            name="author_name"
+            type="text"
+            placeholder="[국문] 작가명을 한글 1~15자 내로 입력해 주세요."
+          />
+        </div>
+
+        <div class="form-item">
+          <label for="comment">이모티콘 설명<span>●</span></label>
+          <textarea
+            id="comment"
+            name="comment"
+            cols="50"
+            rows="5"
+            placeholder="이모티콘 제작 컨셉 혹은 캐릭터에 대한 설명을 작성해 주세요."
+          ></textarea>
+          <!-- <div class="text-count"><span>0</span>/200자</div> -->
+        </div>
+        <div class="text-count"><span>0</span>/200자</div>
+      </div>
+
+      <!-- 이모티콘 시안 -->
+      <div class="form-2">
+        <strong class="form-title"
+          >이모티콘 시안<em class="em-info" style="font-size: 20px"
+            >(필수)</em
+          ></strong
+        >
+
+        <div class="info-design">
+          <span class="txt-guide" style="margin-left: -23px"
+            >이미지 형식 :
+            <em class="emph-guide first-emph">PNG(배경투명, 18종)</em></span
+          >
+          <span class="txt-guide"
+            >이미지 개수 : <em class="emph-guide">총 18종 필수</em></span
+          >
+          <span class="txt-guide"
+            >이미지 사이즈 : <em class="emph-guide">360X360(px)</em></span
+          >
+        </div>
+
+        <div class="image-files">
+          <div class="file-box" v-for="(file, index) in files" :key="index">
+            <div class="file-count">{{ index + 1 }}</div>
+            <font-awesome-icon
+              v-if="file.src.length == 0"
+              class="file-icon"
+              icon="fa-image"
+            />
+            <img v-else class="img-emoji" :src="file.src" />
+            <label class="btn-file"
+              >찾아보기
+              <input
+                type="file"
+                :id="`file_${index}`"
+                :name="index"
+                accept="image/*"
+                @change="uploadImage"
+            /></label>
+          </div>
         </div>
       </div>
-    </div>
 
-    <button class="btn-submit">제출하기</button>
+      <button class="btn-submit">제출하기</button>
+    </form>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, reactive } from '@vue/composition-api';
 import { useStore } from '@/services/pinia';
+import apis from '@/apis';
+import router from '@/router';
 
 export default defineComponent({
   name: 'NewEmotionView',
   setup() {
+    const { apiModule } = apis();
     const store = useStore();
-    const imagesInfo = reactive<{ index: number; imageInfo: string }[]>([]);
+    const files = reactive<{ src: string; file: any }[]>([]);
+
+    // 이미지 사이즈 체크
+    const imageSizeCheck = (result: string): boolean => {
+      let isCheck = false;
+      let img = new Image();
+      img.src = result;
+      img.onload = function () {
+        const width = img.width;
+        const height = img.height;
+        // 파일 사이즈 체크
+        if (width == 360 && height == 360) isCheck = true;
+        else store.messageBoxSetState(true, '이미지 사이즈를 확인해주세요.');
+      };
+
+      return isCheck;
+    };
+
+    // 이미지 미리보기
+    const readImage = (file: File, index: number) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (e) => {
+        if (e.target && e.target.DONE) {
+          const result = e.target.result as string;
+
+          // 테스트
+          files[index].src = result;
+          files[index].file = file;
+
+          // 파일 사이즈 체크
+          // if (imageSizeCheck(result)) {
+          //   files[index].src = result;
+          //   files[index].file = file;
+          // }
+        }
+      };
+    };
 
     // 이미지 업로드
     const uploadImage = (e: InputEvent) => {
       const target = e.target as HTMLInputElement;
 
       if (target.files) {
-        const name = target.name;
-        const image = target.files[0];
-        const reader = new FileReader();
-
-        const size = image.size;
+        const index = parseInt(target.name);
+        const file = target.files[0];
 
         // 파일 크기 체크
-        if (1024 * 150 < size) {
+        if (1024 * 150 < file.size) {
           store.messageBoxSetState(
             true,
-            `${image.name} 이미지 크기가 너무 큽니다. 최대 이미지 크기는 150kb 입니다.`,
+            `${file.name} 이미지 크기가 너무 큽니다. 최대 이미지 크기는 150kb 입니다.`,
           );
         } else {
-          reader.readAsDataURL(image);
-          reader.onload = (e) => {
-            if (e.target && e.target.DONE) {
-              let isFileSizeCheck = false;
-              let img = new Image();
-              img.src = e.target.result as string;
-
-              img.onload = function () {
-                const width = img.width;
-                const height = img.height;
-
-                // 파일 사이즈 체크
-                if (width == 360 && height == 360) {
-                  isFileSizeCheck = true;
-                } else {
-                  store.messageBoxSetState(
-                    true,
-                    '이미지 사이즈를 확인해주세요.',
-                  );
-                }
-              };
-
-              const imageInfo = imagesInfo.find((image) => {
-                return image.index.toString() == name;
-              });
-
-              if (imageInfo && isFileSizeCheck) {
-                imageInfo.imageInfo = e.target.result as string;
-              }
-            }
-          };
+          // 이미지 미리보기 설정
+          readImage(file, index);
         }
       }
     };
 
-    onMounted(() => {
-      // 배열에 이미지객체 18개를 넣는다.
+    const submit = async (e: any) => {
+      const form_data = {
+        product_name: e.target.product_name.value,
+        author_name: e.target.author_name.value,
+        category: e.target.category.value,
+        tag: e.target.tag.value,
+        comment: e.target.comment.value,
+      };
+
+      const formdata = new FormData();
+      formdata.append('form-data', JSON.stringify(form_data));
+      files.forEach((file) => {
+        if (file.file) formdata.append('files', file.file);
+      });
+
+      const response = await apiModule.storeApiModule.fetchEmojiUpload(
+        'test',
+        formdata,
+      );
+
+      // 성공 시
+      if (response.status == 201) {
+        store.messageBoxSetState(
+          true,
+          '이모티콘 시안이 성공적으로 제출되었습니다. 축하드립니다!',
+          () => {
+            router.push({
+              name: 'notice',
+            });
+
+            store.messageBoxState.isMessageBoxShow = false;
+          },
+        );
+      }
+    };
+
+    const init = () => {
+      //  files 데이터 초기화
       for (let i = 0; i < 18; i++) {
-        imagesInfo.push({
-          index: i + 1,
-          imageInfo: '',
+        files.push({
+          src: '',
+          file: null,
         });
       }
+    };
+
+    onMounted(() => {
+      init();
     });
 
-    return { imagesInfo, uploadImage };
+    return { files, uploadImage, submit };
   },
 });
 </script>
