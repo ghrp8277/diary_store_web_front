@@ -28,7 +28,7 @@
         <div class="form-item">
           <label for="category">이모티콘 카테고리 <span>●</span></label>
 
-          <select id="category" name="category">
+          <select id="category" name="category" @change="onChange">
             <option value="" disabled selected>카테고리 선택</option>
             <option value="animal">동물</option>
             <option value="character">인물</option>
@@ -43,6 +43,7 @@
             name="tag"
             type="text"
             placeholder="태그를 1~15자 내로 입력해 주세요."
+            :disabled="isTagDisabled"
           />
         </div>
 
@@ -52,7 +53,7 @@
             id="author-name"
             name="author_name"
             type="text"
-            placeholder="[국문] 작가명을 한글 1~15자 내로 입력해 주세요."
+            placeholder="작가명을 한글 1~15자 내로 입력해 주세요."
           />
         </div>
 
@@ -64,10 +65,13 @@
             cols="50"
             rows="5"
             placeholder="이모티콘 제작 컨셉 혹은 캐릭터에 대한 설명을 작성해 주세요."
+            @keyup="typing"
           ></textarea>
-          <!-- <div class="text-count"><span>0</span>/200자</div> -->
         </div>
-        <div class="text-count"><span>0</span>/200자</div>
+        <div class="text-count">
+          <span>{{ commentCnt }}</span
+          >/200자
+        </div>
       </div>
 
       <!-- 이모티콘 시안 -->
@@ -119,7 +123,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive } from '@vue/composition-api';
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  reactive,
+  ref,
+} from '@vue/composition-api';
 import { useStore } from '@/services/pinia';
 import apis from '@/apis';
 import router from '@/router';
@@ -130,6 +140,8 @@ export default defineComponent({
     const { apiModule } = apis();
     const store = useStore();
     const files = reactive<{ src: string; file: any }[]>([]);
+    const commentCnt = ref(0);
+    const isTagDisabled = ref(true);
 
     // 이미지 사이즈 체크
     const imageSizeCheck = (result: string): boolean => {
@@ -182,12 +194,26 @@ export default defineComponent({
             true,
             `${file.name} 이미지 크기가 너무 큽니다. 최대 이미지 크기는 150kb 입니다.`,
           );
+          console.log(store.messageBoxState);
         } else {
           // 이미지 미리보기 설정
           readImage(file, index);
         }
       }
     };
+
+    function inputValueSizeCheck(
+      size1 = 1,
+      size2: number,
+      cnt: number,
+      label: string,
+    ): boolean {
+      if (size1 <= cnt && size2 >= cnt) return true;
+
+      alert(`${label}을(를) ${size1} ~ ${size2}자 내로 입력해 주세요.`);
+
+      return false;
+    }
 
     const submit = async (e: any) => {
       const form_data = {
@@ -198,30 +224,44 @@ export default defineComponent({
         comment: e.target.comment.value,
       };
 
-      const formdata = new FormData();
-      formdata.append('form-data', JSON.stringify(form_data));
-      files.forEach((file) => {
-        if (file.file) formdata.append('files', file.file);
-      });
+      if (
+        inputValueSizeCheck(2, 22, form_data.product_name.length, '상품명') &&
+        inputValueSizeCheck(1, 15, form_data.tag.length, '이모티콘 태그') &&
+        inputValueSizeCheck(1, 15, form_data.author_name.length, '작가명') &&
+        inputValueSizeCheck(1, 200, form_data.comment.length, '이모티콘 설명')
+      ) {
+        // 이미지 개수 체크
 
-      const response = await apiModule.storeApiModule.fetchEmojiUpload(
-        'test',
-        formdata,
-      );
+        const formdata = new FormData();
+        formdata.append('form-data', JSON.stringify(form_data));
+        files.forEach((file) => {
+          if (file.file) formdata.append('files', file.file);
+        });
 
-      // 성공 시
-      if (response.status == 201) {
-        store.messageBoxSetState(
-          true,
-          '이모티콘 시안이 성공적으로 제출되었습니다. 축하드립니다!',
-          () => {
-            router.push({
-              name: 'notice',
-            });
+        // 이미지 파일 개수 체크
+        if (formdata.getAll('files').length == 18) {
+          const response = await apiModule.storeApiModule.fetchEmojiUpload(
+            'test',
+            formdata,
+          );
 
-            store.messageBoxState.isMessageBoxShow = false;
-          },
-        );
+          // 성공 시
+          if (response.status == 201) {
+            store.messageBoxSetState(
+              true,
+              '이모티콘 시안이 성공적으로 제출되었습니다. 축하드립니다!',
+              () => {
+                router.push({
+                  name: 'notice',
+                });
+
+                store.messageBoxState.isMessageBoxShow = false;
+              },
+            );
+          }
+        } else {
+          alert('이미지 파일 개수 총 18종 필수입니다.');
+        }
       }
     };
 
@@ -239,7 +279,27 @@ export default defineComponent({
       init();
     });
 
-    return { files, uploadImage, submit };
+    return {
+      commentCnt,
+      typing: (e: any) => {
+        const maxCnt = 200;
+        const count = e.target.value.length;
+
+        if (count > maxCnt) {
+          const oldValue = e.target.value.substr(0, maxCnt);
+          e.target.value = oldValue;
+        } else {
+          commentCnt.value = count;
+        }
+      },
+      isTagDisabled,
+      onChange: (e: any) => {
+        isTagDisabled.value = false;
+      },
+      files,
+      uploadImage,
+      submit,
+    };
   },
 });
 </script>
@@ -273,7 +333,12 @@ export default defineComponent({
 }
 
 .new-form {
-  margin: 60px 0;
+  text-align: center;
+}
+
+.new-form > .form-1,
+.form-2 {
+  margin-top: 60px;
 
   text-align: left;
 }
@@ -319,7 +384,7 @@ textarea {
 
   color: #717274;
 
-  padding-inline-start: 20px;
+  padding: 0 20px;
   line-height: 17px;
 }
 
@@ -343,7 +408,7 @@ textarea {
 }
 
 select {
-  width: calc(100% - 176px);
+  width: 100%;
 
   background-image: linear-gradient(45deg, transparent 50%, gray 50%),
     linear-gradient(135deg, gray 50%, transparent 50%),
@@ -359,25 +424,6 @@ select {
   box-sizing: border-box;
   -webkit-appearance: none;
   -moz-appearance: none;
-}
-
-select:focus {
-  background-image: linear-gradient(45deg, black 50%, transparent 50%),
-    linear-gradient(135deg, transparent 50%, black 50%),
-    linear-gradient(to right, #ccc, #ccc);
-  background-position: calc(100% - 15px) 1em, calc(100% - 20px) 1em,
-    calc(100% - 2.5em) 0.5em;
-  background-size: 5px 5px, 5px 5px, 1px 1.5em;
-  background-repeat: no-repeat;
-  border-color: black;
-  outline: 0;
-
-  transition: 0.2s;
-}
-
-select:-moz-focusring {
-  color: transparent;
-  text-shadow: 0 0 0 #000;
 }
 
 .txt-guide {
@@ -448,6 +494,10 @@ input[type='file'] {
   position: relative;
 }
 
+.file-box:nth-child(-n + 6) {
+  border-top: 1px solid #e4e4e4;
+}
+
 .file-box:hover {
   background-color: rgba(#717274, 0.5);
 
@@ -510,5 +560,7 @@ input[type='file'] {
   padding: 20px 80px;
 
   cursor: pointer;
+
+  margin-top: 20px;
 }
 </style>

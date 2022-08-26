@@ -13,7 +13,7 @@ export const useStore = defineStore('main', {
       isShow: boolean,
       message = '',
       confirm = () => {
-        this.messageBoxState.isMessageBoxShow = isShow;
+        this.messageBoxState.isMessageBoxShow = !isShow;
       },
     ) {
       this.messageBoxState.isMessageBoxShow = isShow;

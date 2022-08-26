@@ -7,6 +7,11 @@ const routes: Array<RouteConfig> = [
     component: () => import('@/views/studio/AuditionView.vue'),
   },
   {
+    path: 'proposals',
+    name: 'proposals',
+    component: () => import('@/views/studio/ProposalsView.vue'),
+  },
+  {
     path: 'notice',
     name: 'notice',
     component: () => import('@/views/studio/NoticeView.vue'),

@@ -12,6 +12,10 @@
         <font-awesome-icon icon="fa-lightbulb" />
         <span class="menu-title">이모티콘 제안</span>
       </router-link>
+      <router-link :to="{ name: 'proposals' }" tag="div" class="menu">
+        <font-awesome-icon icon="fa-pencil-square" />
+        <span class="menu-title">제안 관리</span>
+      </router-link>
       <router-link :to="{ name: 'notice' }" tag="div" class="menu">
         <font-awesome-icon icon="fa-clipboard" />
         <span class="menu-title">공지사항</span>
