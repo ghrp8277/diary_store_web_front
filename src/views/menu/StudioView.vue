@@ -2,7 +2,9 @@
   <div class="studio">
     <user-card />
     <!-- 본문 내용 -->
-    <router-view />
+    <div class="container">
+      <router-view />
+    </div>
   </div>
 </template>
 
@@ -20,12 +22,16 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .studio {
+  min-height: 700px;
   display: grid;
 
   grid-template-columns: minmax(280px, 1fr) 3fr;
 }
 
-.studio > div {
-  white-space: nowrap;
+.container {
+  border: 1px solid #e6e6e6;
+  margin: 10px;
+
+  background-color: white;
 }
 </style>

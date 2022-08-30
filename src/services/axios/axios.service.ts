@@ -4,28 +4,22 @@ import axios, {
   AxiosPromise,
   AxiosError,
 } from 'axios';
-// import { ElLoading } from 'element-plus';
-// import AxiosServiceError from '@/service/axios.error';
-import { ref } from '@vue/composition-api';
+
+import AxiosServiceError from '@/services/axios/axios.error';
+import { useStore } from '@/services/pinia';
 
 const DEBUG = process.env.NODE_ENV === 'development';
 const ReadConsoleInfo = false;
+const store = useStore();
 
 // loading ui
-const loading = ref();
+const startLoading = () => {
+  store.isLoading = true;
+};
 
-// const startLoading = () => {
-//   loading.value = ElLoading.service({
-//     lock: true,
-//     text: 'loading....',
-//     spinner: 'el-icon-loading',
-//     background: 'rgba(0, 0, 0, 0.8)',
-//   });
-// };
-
-// const endLoading = () => {
-//   loading.value.close();
-// };
+const endLoading = () => {
+  store.isLoading = false;
+};
 
 // axios setting
 axios.defaults.timeout = 60 * 1000;
@@ -41,7 +35,7 @@ axios.interceptors.request.use(
                 [headers] [${JSON.stringify(config.headers)}]
             `);
     }
-    // startLoading()
+    startLoading();
     return config;
   },
   (error: AxiosError): Promise<AxiosError> => {
@@ -62,25 +56,23 @@ axios.interceptors.response.use(
                 [data] [${JSON.stringify(response.data)}]
             `);
     }
-    // endLoading()
+    endLoading();
     return response;
   },
-  // (error: AxiosError): Promise<AxiosError> => {
-  //   if (DEBUG && ReadConsoleInfo) {
-  //     console.error(`
-  //               [method] [${error.response?.config.method}]
-  //               [mappedServiceUrl] [${error.response?.config.url}]
-  //               [responseStatusCode] [${error.response?.status}]
-  //           `);
-  //   }
+  (error: AxiosError): Promise<AxiosError> => {
+    if (DEBUG && ReadConsoleInfo) {
+      console.error(`
+                [method] [${error.response?.config.method}]
+                [mappedServiceUrl] [${error.response?.config.url}]
+                [responseStatusCode] [${error.response?.status}]
+            `);
+    }
 
-  // const exception = new AxiosServiceError(error).handleException(
-  //   requestErrorCount.value,
-  // );
-  // requestErrorCount.value += exception.count;
-  // endLoading()
-  // return Promise.reject({ error, payload: exception.payload });
-  // },
+    const exception = new AxiosServiceError(error);
+
+    endLoading();
+    return Promise.reject({ error, payload: exception.payload });
+  },
 );
 
 // get, post, put, delete

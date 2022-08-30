@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="audition">
     <div class="studio-manual">
       <div class="open-studio">OPEN STUDIO</div>
       <h4>
@@ -61,14 +61,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.container {
-  border: 1px solid #e6e6e6;
-  margin: 10px;
-}
-
 .studio-manual {
-  width: 50%;
-
   margin: 0 auto;
 
   padding-top: 100px;

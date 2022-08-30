@@ -1,10 +1,10 @@
 import axios, { AxiosPromise } from 'axios';
-import { postRequest } from '@/services/axios/axios.service';
-import { FileCategoryDto } from '@/types/fileCategory';
-// import { Login, Response, User } from "@/types/auth"
+import { getRequest } from '@/services/axios/axios.service';
+import { EmojiFileInfo } from '@/types/emojiFilesInfo';
 
 interface Axois {
   fetchEmojiUpload(username: string, formData: FormData): AxiosPromise<any>;
+  fetchEmojiFilesInfo(username: string): AxiosPromise<EmojiFileInfo[]>;
 }
 
 export default (url: string) => {
@@ -13,12 +13,20 @@ export default (url: string) => {
     fetchEmojiUpload: async (username: string, formData: FormData) => {
       const response = await axios({
         method: 'post',
-        url: `${url}/emoji/upload/${username}`,
+        url: `${url}/${username}/emoji/upload`,
         data: formData,
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
+      return response;
+    },
+    // 이미지 파일 (승인 정보) 가져온다.
+    fetchEmojiFilesInfo: async (username: string) => {
+      const response = await getRequest<EmojiFileInfo[]>(
+        `${url}/${username}/emoji/info`,
+      );
+
       return response;
     },
   };

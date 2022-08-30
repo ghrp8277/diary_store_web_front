@@ -7,6 +7,7 @@ export const useStore = defineStore('main', {
       message: '',
       confirm: null as unknown,
     },
+    isLoading: false,
   }),
   actions: {
     messageBoxSetState(

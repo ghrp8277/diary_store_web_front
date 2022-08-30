@@ -34,7 +34,11 @@
     </header>
     <!-- 본문 내용 -->
     <main :class="{ 'box-show': isShow }">
-      <router-view />
+      <router-view v-slot="{ Component, route }">
+        <Transition name="slide" mode="out-in">
+          <component :is="Component" :key="route.path" />
+        </Transition>
+      </router-view>
     </main>
     <!-- 메시지 박스 -->
     <div :class="{ 'layer-dimmed': isShow }"></div>
@@ -78,8 +82,6 @@ header {
 main {
   width: 1100px;
   margin: 0 auto;
-
-  height: 100%;
 
   padding-top: 60px;
 }
@@ -158,5 +160,16 @@ li {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: opacity 1s, transform 1s;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  opacity: 0;
+  transform: translateX(-30%);
 }
 </style>

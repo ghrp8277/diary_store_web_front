@@ -41,7 +41,7 @@ export default defineComponent({
   border: 1px solid #e6e6e6;
   background-color: white;
 
-  height: 350px;
+  height: 370px;
 }
 
 // 유저정보
@@ -80,7 +80,7 @@ export default defineComponent({
 }
 // 메뉴정보
 .menus {
-  margin: 0 35px;
+  margin: 10px 35px;
 }
 
 .menu {
@@ -107,6 +107,8 @@ export default defineComponent({
 
 .menu > svg {
   padding-inline-end: 10px;
+
+  font-size: 16px;
 }
 
 .menu-title {

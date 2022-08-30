@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="new-emotion">
     <h1 class="new-title">
       신규 제안
       <span>
@@ -126,6 +126,7 @@
 import {
   computed,
   defineComponent,
+  h,
   onMounted,
   reactive,
   ref,
@@ -144,19 +145,25 @@ export default defineComponent({
     const isTagDisabled = ref(true);
 
     // 이미지 사이즈 체크
-    const imageSizeCheck = (result: string): boolean => {
-      let isCheck = false;
+    const imageSizeCheck = async (result: string) => {
       let img = new Image();
       img.src = result;
-      img.onload = function () {
+
+      function sizeCheck() {
         const width = img.width;
         const height = img.height;
-        // 파일 사이즈 체크
-        if (width == 360 && height == 360) isCheck = true;
-        else store.messageBoxSetState(true, '이미지 사이즈를 확인해주세요.');
-      };
 
-      return isCheck;
+        if (width == 360 && height == 360) return true;
+        else return false;
+      }
+
+      function onloadPromise() {
+        return new Promise((resolve) => {
+          img.onload = () => resolve(sizeCheck());
+        });
+      }
+
+      return await onloadPromise();
     };
 
     // 이미지 미리보기
@@ -167,15 +174,15 @@ export default defineComponent({
         if (e.target && e.target.DONE) {
           const result = e.target.result as string;
 
-          // 테스트
-          files[index].src = result;
-          files[index].file = file;
-
           // 파일 사이즈 체크
-          // if (imageSizeCheck(result)) {
-          //   files[index].src = result;
-          //   files[index].file = file;
-          // }
+          imageSizeCheck(result).then((isCheck) => {
+            if (isCheck) {
+              files[index].src = result;
+              files[index].file = file;
+            } else {
+              store.messageBoxSetState(true, '이미지 사이즈를 확인해주세요.');
+            }
+          });
         }
       };
     };
@@ -194,7 +201,6 @@ export default defineComponent({
             true,
             `${file.name} 이미지 크기가 너무 큽니다. 최대 이미지 크기는 150kb 입니다.`,
           );
-          console.log(store.messageBoxState);
         } else {
           // 이미지 미리보기 설정
           readImage(file, index);
@@ -239,7 +245,7 @@ export default defineComponent({
         });
 
         // 이미지 파일 개수 체크
-        if (formdata.getAll('files').length == 18) {
+        if (formdata.getAll('files').length > 0) {
           const response = await apiModule.storeApiModule.fetchEmojiUpload(
             'test',
             formdata,
@@ -260,7 +266,11 @@ export default defineComponent({
             );
           }
         } else {
-          alert('이미지 파일 개수 총 18종 필수입니다.');
+          alert(
+            `이미지 파일을 추가해 주세요 \n현재 선택된 이미지 파일 갯수: ${
+              formdata.getAll('files').length
+            }`,
+          );
         }
       }
     };
@@ -305,13 +315,12 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.container {
-  border: 1px solid #e6e6e6;
-  margin: 10px;
+.new-emotion {
+  margin: 10px auto;
 
-  padding: 15px 50px;
+  padding: 15px 0;
 
-  background-color: white;
+  width: 700px;
 }
 
 .new-title {
@@ -361,10 +370,10 @@ export default defineComponent({
   font-size: 13px;
   font-weight: bold;
 
-  margin-right: 60px;
+  margin-right: 40px;
   display: inline-block;
 
-  width: 100px;
+  width: 120px;
 }
 .form-item > label > span {
   color: red;
@@ -408,7 +417,9 @@ textarea {
 }
 
 select {
-  width: 100%;
+  width: calc(100% - 160px);
+
+  white-space: nowrap;
 
   background-image: linear-gradient(45deg, transparent 50%, gray 50%),
     linear-gradient(135deg, gray 50%, transparent 50%),
@@ -484,14 +495,18 @@ input[type='file'] {
 }
 
 .file-box {
-  width: 130px;
+  width: 100%;
   height: 130px;
 
   border-bottom: 1px solid #e4e4e4;
 
   background-color: rgba(#edeff4, 0.1);
 
-  position: relative;
+  text-align: center;
+
+  display: flex;
+
+  flex-direction: column;
 }
 
 .file-box:nth-child(-n + 6) {
@@ -507,18 +522,15 @@ input[type='file'] {
 }
 
 .file-icon {
-  height: 35px;
-  position: relative;
+  font-size: 25px;
   color: gainsboro;
-  left: 45px;
 }
 
 .img-emoji {
-  width: 100%;
-  height: 100%;
+  width: 116.66px;
+  height: 130px;
 
   position: absolute;
-  top: 0;
 }
 
 .file-count {
@@ -529,6 +541,7 @@ input[type='file'] {
   font-weight: normal;
 
   color: #000;
+  text-align: left;
 }
 
 .btn-file {
@@ -542,10 +555,9 @@ input[type='file'] {
 
   cursor: pointer;
 
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin: -40px 0 0 -45px;
+  position: relative;
+  top: 30px;
+  margin: 0 10px;
 
   visibility: hidden;
 }

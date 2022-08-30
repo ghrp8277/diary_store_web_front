@@ -1,5 +1,5 @@
 <template>
-  <div class="container">공지사항</div>
+  <div class="notice">공지사항</div>
 </template>
 
 <script lang="ts">
