@@ -167,7 +167,7 @@ export default defineComponent({
     };
 
     // 이미지 미리보기
-    const readImage = (file: File, index: number) => {
+    const readImage = (file: File, index: number, target: HTMLInputElement) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = (e) => {
@@ -180,6 +180,7 @@ export default defineComponent({
               files[index].src = result;
               files[index].file = file;
             } else {
+              target.value = '';
               store.messageBoxSetState(true, '이미지 사이즈를 확인해주세요.');
             }
           });
@@ -189,6 +190,7 @@ export default defineComponent({
 
     // 이미지 업로드
     const uploadImage = (e: InputEvent) => {
+      e.preventDefault();
       const target = e.target as HTMLInputElement;
 
       if (target.files) {
@@ -201,9 +203,11 @@ export default defineComponent({
             true,
             `${file.name} 이미지 크기가 너무 큽니다. 최대 이미지 크기는 150kb 입니다.`,
           );
+          // file reset
+          target.value = '';
         } else {
           // 이미지 미리보기 설정
-          readImage(file, index);
+          readImage(file, index, target);
         }
       }
     };
@@ -246,19 +250,19 @@ export default defineComponent({
 
         // 이미지 파일 개수 체크
         if (formdata.getAll('files').length > 0) {
-          const response = await apiModule.storeApiModule.fetchEmojiUpload(
+          const { status } = await apiModule.storeApiModule.fetchEmojiUpload(
             'test',
             formdata,
           );
 
           // 성공 시
-          if (response.status == 201) {
+          if (status == 201) {
             store.messageBoxSetState(
               true,
               '이모티콘 시안이 성공적으로 제출되었습니다. 축하드립니다!',
               () => {
                 router.push({
-                  name: 'notice',
+                  name: 'proposals',
                 });
 
                 store.messageBoxState.isMessageBoxShow = false;
@@ -373,7 +377,7 @@ export default defineComponent({
   margin-right: 40px;
   display: inline-block;
 
-  width: 120px;
+  width: 130px;
 }
 .form-item > label > span {
   color: red;
@@ -507,6 +511,8 @@ input[type='file'] {
   display: flex;
 
   flex-direction: column;
+
+  position: relative;
 }
 
 .file-box:nth-child(-n + 6) {
@@ -555,9 +561,9 @@ input[type='file'] {
 
   cursor: pointer;
 
-  position: relative;
-  top: 30px;
-  margin: 0 10px;
+  position: absolute;
+  bottom: 10px;
+  left: 13.5px;
 
   visibility: hidden;
 }

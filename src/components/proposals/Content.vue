@@ -14,7 +14,7 @@
       <span>{{ proposals.length }}건 </span>
     </div>
 
-    <table>
+    <table @click="onClick">
       <thead>
         <tr>
           <th>번호</th>
@@ -25,7 +25,7 @@
       </thead>
       <tbody>
         <tr v-for="(proposal, index) in proposals" :key="index">
-          <td>{{ index + 1 }}</td>
+          <td>{{ proposal.id }}</td>
           <td>{{ isConfirmMatched(proposal.is_confirm) }}</td>
           <td>{{ proposal.product_name }}</td>
           <td>{{ dateFormat(proposal.createdAt) }}</td>
@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api';
+import { defineComponent, computed, ref } from '@vue/composition-api';
 import { useStore } from '@/services/pinia/store';
 import { IsConfirm } from '@/types/emojiFilesInfo';
 import moment from 'moment';
@@ -46,15 +46,68 @@ export default defineComponent({
   setup() {
     const store = useStore();
 
-    const proposals = computed(() => store.emojiFilesInfo);
+    const emojiFilesInfo = computed(() => store.emojiFilesInfo);
+    const proposals = ref(emojiFilesInfo.value);
 
     const onChange = (e: any) => {
-      console.log(e.target.value);
+      switch (e.target.value) {
+        case 'ALL':
+          proposals.value = [...emojiFilesInfo.value];
+          break;
+        case 'SUBMISSION_COMPLETE':
+          proposals.value = [
+            ...emojiFilesInfo.value.filter(
+              (emojiFileInfo) => emojiFileInfo.is_confirm == 0,
+            ),
+          ];
+          break;
+        case 'UNDER_REVIEW':
+          proposals.value = [
+            ...emojiFilesInfo.value.filter(
+              (emojiFileInfo) => emojiFileInfo.is_confirm == 1,
+            ),
+          ];
+          break;
+        case 'NOT_APPROVED':
+          proposals.value = [
+            ...emojiFilesInfo.value.filter(
+              (emojiFileInfo) => emojiFileInfo.is_confirm == 2,
+            ),
+          ];
+          break;
+        case 'APPROVED':
+          proposals.value = [
+            ...emojiFilesInfo.value.filter(
+              (emojiFileInfo) => emojiFileInfo.is_confirm == 3,
+            ),
+          ];
+          break;
+      }
+    };
+
+    const onClick = (e: any) => {
+      function tdClick(td: any) {
+        const tr = td.parentNode;
+
+        const id = tr.children[0].innerText;
+        const is_confirm = tr.children[1].innerText;
+        const product_name = tr.children[2].innerText;
+        const createdAt = tr.children[3].innerText;
+
+        console.log(id, is_confirm, product_name, createdAt);
+      }
+
+      const td = e.target.closest('td');
+
+      if (!td) return;
+
+      tdClick(td);
     };
 
     return {
       proposals,
       onChange,
+      onClick,
       dateFormat: (date: Date) => {
         return moment(date).format('YYYY-MM-DD');
       },
@@ -113,6 +166,8 @@ export default defineComponent({
   border-spacing: 0;
 
   border-bottom: 2px solid rgb(202, 202, 202);
+
+  table-layout: fixed;
 }
 
 .proposals-content > table > thead {
@@ -129,6 +184,14 @@ export default defineComponent({
   color: #000;
 
   border-bottom: 1px solid #000;
+}
+
+.proposals-content > table > tbody > tr {
+  cursor: pointer;
+}
+
+.proposals-content > table > tbody > tr:hover {
+  background-color: rgba(#666, 0.1);
 }
 
 .proposals-content > table > tbody > tr > td {

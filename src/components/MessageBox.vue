@@ -12,12 +12,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  reactive,
-} from '@vue/composition-api';
+import { computed, defineComponent } from '@vue/composition-api';
 import { useStore } from '@/services/pinia';
 
 export default defineComponent({

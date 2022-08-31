@@ -1,4 +1,5 @@
 export interface EmojiFileInfo {
+  id: number;
   createdAt: Date;
   is_confirm: number;
   product_name: string;
