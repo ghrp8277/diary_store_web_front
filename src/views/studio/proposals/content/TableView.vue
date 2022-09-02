@@ -1,11 +1,9 @@
 <template>
-  <div class="proposals-content">
-    <h1 class="proposals-title">제안 관리</h1>
-
+  <div class="table-view">
     <div class="box-dropdown">
       <select id="dropdown" name="dropdown" @change="onChange">
         <option value="ALL" selected>전체</option>
-        <option value="SUBMISSION_COMPLETE">제출 완료</option>
+        <option value="SUBMISSION_COMPLETE">제출완료</option>
         <option value="UNDER_REVIEW">심사중</option>
         <option value="NOT_APPROVED">미승인</option>
         <option value="APPROVED">승인</option>
@@ -40,9 +38,10 @@ import { defineComponent, computed, ref } from '@vue/composition-api';
 import { useStore } from '@/services/pinia/store';
 import { IsConfirm } from '@/types/emojiFilesInfo';
 import moment from 'moment';
+import router from '@/router';
 
 export default defineComponent({
-  name: 'ProposalsContent',
+  name: 'ProposalsTableView',
   setup() {
     const store = useStore();
 
@@ -90,11 +89,13 @@ export default defineComponent({
         const tr = td.parentNode;
 
         const id = tr.children[0].innerText;
-        const is_confirm = tr.children[1].innerText;
-        const product_name = tr.children[2].innerText;
-        const createdAt = tr.children[3].innerText;
 
-        console.log(id, is_confirm, product_name, createdAt);
+        router.push({
+          name: 'proposal',
+          params: {
+            id,
+          },
+        });
       }
 
       const td = e.target.closest('td');
@@ -112,9 +113,11 @@ export default defineComponent({
         return moment(date).format('YYYY-MM-DD');
       },
       isConfirmMatched: (is_confirm: number) => {
-        switch (IsConfirm[is_confirm]) {
+        const index = IsConfirm[is_confirm];
+
+        switch (index) {
           case 'SUBMISSION_COMPLETE':
-            return '제출 완료';
+            return '제출완료';
           case 'UNDER_REVIEW':
             return '심사중';
           case 'NOT_APPROVED':
@@ -129,15 +132,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.proposals-content {
-  margin: 30px 60px;
-}
-.proposals-title {
-  text-align: left;
-
-  border-bottom: 1px solid #000;
-}
-
 .box-dropdown {
   text-align: left;
 
@@ -157,7 +151,7 @@ export default defineComponent({
 
   direction: rtl;
 }
-.proposals-content > table {
+.table-view > table {
   width: 100%;
   margin-top: 50px;
 
@@ -170,11 +164,11 @@ export default defineComponent({
   table-layout: fixed;
 }
 
-.proposals-content > table > thead {
+.table-view > table > thead {
   background-color: rgb(170, 170, 170, 0.3);
 }
 
-.proposals-content > table > thead > tr > th {
+.table-view > table > thead > tr > th {
   font-size: 15px;
 
   font-weight: bold;
@@ -186,15 +180,15 @@ export default defineComponent({
   border-bottom: 1px solid #000;
 }
 
-.proposals-content > table > tbody > tr {
+.table-view > table > tbody > tr {
   cursor: pointer;
 }
 
-.proposals-content > table > tbody > tr:hover {
+.table-view > table > tbody > tr:hover {
   background-color: rgba(#666, 0.1);
 }
 
-.proposals-content > table > tbody > tr > td {
+.table-view > table > tbody > tr > td {
   font-size: 15px;
 
   padding: 10px;

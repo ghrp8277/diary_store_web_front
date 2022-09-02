@@ -1,4 +1,5 @@
 import { RouteConfig } from 'vue-router';
+import proposalsRoute from '@/router/studio/proposals';
 
 const routes: Array<RouteConfig> = [
   {
@@ -10,6 +11,11 @@ const routes: Array<RouteConfig> = [
     path: 'proposals',
     name: 'proposals',
     component: () => import('@/views/studio/ProposalsView.vue'),
+    props: true,
+    redirect: {
+      name: 'content',
+    },
+    children: proposalsRoute,
   },
   {
     path: 'notice',

@@ -42,6 +42,7 @@ axios.interceptors.request.use(
     if (DEBUG && ReadConsoleInfo) {
       console.error(`[request error] [${JSON.stringify(error)}]`);
     }
+    endLoading();
     return Promise.reject(error);
   },
 );
@@ -71,7 +72,7 @@ axios.interceptors.response.use(
     const exception = new AxiosServiceError(error);
 
     endLoading();
-    return Promise.reject({ error, payload: exception.payload });
+    return Promise.reject({ error, payload: exception });
   },
 );
 
