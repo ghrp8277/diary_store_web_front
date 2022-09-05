@@ -5,3 +5,10 @@ export interface FileCategoryDto {
   tag: string;
   comment: string;
 }
+
+export interface FileCategorySuccess {
+  is_confirm: any;
+  product_name: string;
+  category: string;
+  tag: string;
+}

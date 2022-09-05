@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import MessageBox from '@/components/MessageBox.vue';
-import { defineComponent, computed } from '@vue/composition-api';
+import { defineComponent, ref, computed } from '@vue/composition-api';
 import { useStore } from '@/services/pinia';
 
 export default defineComponent({
@@ -77,6 +77,8 @@ header {
   top: 0;
   height: 60px;
   background: #393a3e;
+
+  z-index: 10;
 }
 
 main {
@@ -84,6 +86,8 @@ main {
   margin: 0 auto;
 
   padding-top: 60px;
+
+  min-height: 100%;
 }
 
 .main-nav {

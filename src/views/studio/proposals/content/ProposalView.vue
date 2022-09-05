@@ -88,7 +88,7 @@ export default defineComponent({
 
     return {
       proposalInfo,
-      confirmMatched: computed(() => store.confirmMathed),
+      confirmMatched: computed(() => store.confirmMatched),
       createAtToMoment: computed(() => store.createAtToMoment),
     };
   },
@@ -235,8 +235,11 @@ export default defineComponent({
   font-size: 20px;
 }
 
+.emoji-info > dl {
+  margin: 30px 0;
+}
+
 .emoji-info > dl > dt {
-  // text-align: left;
   font-weight: bold;
   color: #000;
   font-size: 14px;

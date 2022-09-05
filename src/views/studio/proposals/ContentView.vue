@@ -25,6 +25,8 @@ export default defineComponent({
   text-align: left;
 
   border-bottom: 1px solid #000;
+
+  padding: 0 0 10px;
 }
 
 .box-dropdown {

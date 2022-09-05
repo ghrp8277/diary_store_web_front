@@ -17,14 +17,14 @@ export default defineComponent({
   name: 'ProposalsView',
   setup() {
     const store = useStore();
-    const name = ref('not');
+    const name = ref('');
 
     onMounted(async () => {
-      await store.FETCH_EMOJI_FILES_INFO('test');
+      await store.FETCH_PROPOSALS_INFO('test');
 
-      if (store.emojiFilesInfo.length > 0) {
+      if (store.proposalsInfo.length > 0) {
         name.value = 'exist';
-      }
+      } else name.value = 'not';
     });
 
     return {

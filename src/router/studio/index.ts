@@ -1,5 +1,6 @@
 import { RouteConfig } from 'vue-router';
 import proposalsRoute from '@/router/studio/proposals';
+import noticesRoute from '@/router/studio/notices';
 
 const routes: Array<RouteConfig> = [
   {
@@ -18,14 +19,25 @@ const routes: Array<RouteConfig> = [
     children: proposalsRoute,
   },
   {
-    path: 'notice',
-    name: 'notice',
-    component: () => import('@/views/studio/NoticeView.vue'),
+    path: 'notices',
+    name: 'notices',
+    component: () => import('@/views/studio/NoticesView.vue'),
+    props: true,
+    redirect: {
+      name: 'notices-content',
+    },
+    children: noticesRoute,
   },
   {
     path: 'audition/new',
     name: 'emotion',
     component: () => import('@/views/studio/audition/NewEmotion.vue'),
+  },
+  {
+    path: 'audition/success',
+    name: 'success',
+    component: () => import('@/views/studio/audition/SuccessPage.vue'),
+    props: true,
   },
 ];
 

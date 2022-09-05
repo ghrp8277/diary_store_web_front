@@ -250,25 +250,7 @@ export default defineComponent({
 
         // 이미지 파일 개수 체크
         if (formdata.getAll('files').length > 0) {
-          const { status } = await apiModule.storeApiModule.fetchEmojiUpload(
-            'test',
-            formdata,
-          );
-
-          // 성공 시
-          if (status == 201) {
-            store.messageBoxSetState(
-              true,
-              '이모티콘 시안이 성공적으로 제출되었습니다. 축하드립니다!',
-              () => {
-                router.push({
-                  name: 'proposals',
-                });
-
-                store.messageBoxState.isMessageBoxShow = false;
-              },
-            );
-          }
+          await apiModule.storeApiModule.fetchEmojiUpload('test', formdata);
         } else {
           alert(
             `이미지 파일을 추가해 주세요 \n현재 선택된 이미지 파일 갯수: ${
@@ -330,6 +312,8 @@ export default defineComponent({
 .new-title {
   text-align: left;
   border-bottom: 1px solid black;
+
+  padding: 0 0 10px;
 }
 
 .new-title > span {
@@ -534,7 +518,9 @@ input[type='file'] {
 
 .img-emoji {
   width: 116.66px;
-  height: 130px;
+  height: 95px;
+
+  top: 35px;
 
   position: absolute;
 }

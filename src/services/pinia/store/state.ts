@@ -1,8 +1,8 @@
-import { EmojiFileInfo } from '@/types/emojiFilesInfo';
+import { ProposalsInfo } from '@/types/proposals';
 import { ProposalInfo } from '@/types/proposal';
 
 const state = {
-  emojiFilesInfo: [] as EmojiFileInfo[],
+  proposalsInfo: [] as ProposalsInfo[],
   proposalInfo: {} as ProposalInfo,
 };
 

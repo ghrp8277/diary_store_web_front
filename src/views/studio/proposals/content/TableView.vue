@@ -24,9 +24,9 @@
       <tbody>
         <tr v-for="(proposal, index) in proposals" :key="index">
           <td>{{ proposal.id }}</td>
-          <td>{{ isConfirmMatched(proposal.is_confirm) }}</td>
+          <td>{{ proposal.is_confirm }}</td>
           <td>{{ proposal.product_name }}</td>
-          <td>{{ dateFormat(proposal.createdAt) }}</td>
+          <td>{{ proposal.createdAt }}</td>
         </tr>
       </tbody>
     </table>
@@ -36,69 +36,68 @@
 <script lang="ts">
 import { defineComponent, computed, ref } from '@vue/composition-api';
 import { useStore } from '@/services/pinia/store';
-import { IsConfirm } from '@/types/emojiFilesInfo';
-import moment from 'moment';
 import router from '@/router';
+import { IsConfirm2, ProposalsMatchedInfo } from '@/types/proposals';
 
 export default defineComponent({
   name: 'ProposalsTableView',
   setup() {
     const store = useStore();
 
-    const emojiFilesInfo = computed(() => store.emojiFilesInfo);
-    const proposals = ref(emojiFilesInfo.value);
+    const proposals = computed(() => store.confirmTableMatched);
+    const copy_proposals = ref([...proposals.value]);
 
     const onChange = (e: any) => {
+      function copy(array: ProposalsMatchedInfo[]) {
+        copy_proposals.value = [...array];
+      }
+
+      function matched(match_confirm: number) {
+        return proposals.value.filter((proposal) => {
+          const is_confirm = proposal.is_confirm as string;
+
+          if (is_confirm == IsConfirm2[match_confirm]) return proposal;
+        });
+      }
+
       switch (e.target.value) {
         case 'ALL':
-          proposals.value = [...emojiFilesInfo.value];
+          copy(proposals.value);
           break;
         case 'SUBMISSION_COMPLETE':
-          proposals.value = [
-            ...emojiFilesInfo.value.filter(
-              (emojiFileInfo) => emojiFileInfo.is_confirm == 0,
-            ),
-          ];
+          copy(matched(0));
           break;
         case 'UNDER_REVIEW':
-          proposals.value = [
-            ...emojiFilesInfo.value.filter(
-              (emojiFileInfo) => emojiFileInfo.is_confirm == 1,
-            ),
-          ];
+          copy(matched(1));
           break;
         case 'NOT_APPROVED':
-          proposals.value = [
-            ...emojiFilesInfo.value.filter(
-              (emojiFileInfo) => emojiFileInfo.is_confirm == 2,
-            ),
-          ];
+          copy(matched(2));
           break;
         case 'APPROVED':
-          proposals.value = [
-            ...emojiFilesInfo.value.filter(
-              (emojiFileInfo) => emojiFileInfo.is_confirm == 3,
-            ),
-          ];
+          copy(matched(3));
           break;
       }
     };
 
-    const onClick = (e: any) => {
-      function tdClick(td: any) {
+    const onClick = (e: Event) => {
+      const target = e.target as HTMLElement;
+
+      function tdClick(td: HTMLTableCellElement) {
         const tr = td.parentNode;
 
-        const id = tr.children[0].innerText;
+        if (tr) {
+          const id = (tr.children[0] as any).innerText;
 
-        router.push({
-          name: 'proposal',
-          params: {
-            id,
-          },
-        });
+          router.push({
+            name: 'proposal',
+            params: {
+              id,
+            },
+          });
+        }
       }
 
-      const td = e.target.closest('td');
+      const td = target.closest('td');
 
       if (!td) return;
 
@@ -106,26 +105,9 @@ export default defineComponent({
     };
 
     return {
-      proposals,
+      proposals: copy_proposals,
       onChange,
       onClick,
-      dateFormat: (date: Date) => {
-        return moment(date).format('YYYY-MM-DD');
-      },
-      isConfirmMatched: (is_confirm: number) => {
-        const index = IsConfirm[is_confirm];
-
-        switch (index) {
-          case 'SUBMISSION_COMPLETE':
-            return '제출완료';
-          case 'UNDER_REVIEW':
-            return '심사중';
-          case 'NOT_APPROVED':
-            return '미승인';
-          case 'APPROVED':
-            return '승인';
-        }
-      },
     };
   },
 });

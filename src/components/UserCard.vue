@@ -16,7 +16,7 @@
         <font-awesome-icon icon="fa-pencil-square" />
         <span class="menu-title">제안 관리</span>
       </router-link>
-      <router-link :to="{ name: 'notice' }" tag="div" class="menu">
+      <router-link :to="{ name: 'notices' }" tag="div" class="menu">
         <font-awesome-icon icon="fa-clipboard" />
         <span class="menu-title">공지사항</span>
       </router-link>
@@ -103,6 +103,8 @@ export default defineComponent({
 
 .router-link-active > .menu-title {
   font-weight: bold;
+
+  font-size: normal;
 }
 
 .menu > svg {
@@ -112,7 +114,7 @@ export default defineComponent({
 }
 
 .menu-title {
-  font-size: 15px;
+  font-size: 13px;
 
   font-weight: 400;
 

@@ -8,11 +8,11 @@ export default () => {
   const baseUrl = 'http://192.168.0.212';
   const basePort = '3000';
   const version = 'v1';
-  const api: Api = {
-    storeURI: `${baseUrl}:${basePort}/${version}/store`,
+  const apis: Api = {
+    storeURL: `${baseUrl}:${basePort}/${version}/store`,
   };
 
-  const { storeApiModule } = store(api.storeURI);
+  const { storeApiModule } = store(apis.storeURL);
 
   const apiModule = {
     storeApiModule,
