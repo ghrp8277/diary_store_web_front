@@ -40,27 +40,16 @@
         </Transition>
       </router-view>
     </main>
-    <!-- 메시지 박스 -->
-    <div :class="{ 'layer-dimmed': isShow }"></div>
-    <message-box v-if="isShow" />
   </div>
 </template>
 
 <script lang="ts">
-import MessageBox from '@/components/MessageBox.vue';
-import { defineComponent, ref, computed } from '@vue/composition-api';
-import { useStore } from '@/services/pinia';
+import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'MainView',
-  components: { MessageBox },
   setup() {
-    const store = useStore();
-    const isShow = computed(() => store.messageBoxState.isMessageBoxShow);
-
-    return {
-      isShow,
-    };
+    return {};
   },
 });
 </script>
@@ -144,17 +133,6 @@ li {
 
 .right-items li:hover::after {
   width: 100%;
-}
-
-.layer-dimmed {
-  overflow: auto;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.33);
-  z-index: 1000;
 }
 
 .box-show {

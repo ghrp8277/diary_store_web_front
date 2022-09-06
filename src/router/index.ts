@@ -32,6 +32,10 @@ const routes: Array<RouteConfig> = [
       },
     ],
   },
+  {
+    path: '*',
+    component: () => import('@/views/NotFoundPage.vue'),
+  },
 ];
 
 const router = new VueRouter({
