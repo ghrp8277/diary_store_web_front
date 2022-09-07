@@ -30,7 +30,7 @@
       </thead>
       <tbody>
         <tr>
-          <td>{{ is_confirm }}</td>
+          <!-- <td>{{ is_confirm }}</td> -->
           <td>{{ query.product_name }}</td>
           <td>{{ query.category }}</td>
           <td>{{ query.tag }}</td>
@@ -46,7 +46,7 @@
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
-import { IsConfirm2 } from '@/types/proposals';
+// import { IsConfirm2 } from '@/types/proposals';
 import router from '@/router';
 
 export default defineComponent({
@@ -57,7 +57,7 @@ export default defineComponent({
     return {
       query,
       router,
-      is_confirm: IsConfirm2[Number(query.is_confirm)],
+      // is_confirm: IsConfirm2[Number(query.is_confirm)],
     };
   },
 });

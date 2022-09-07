@@ -1,7 +1,6 @@
-import { ProposalsInfo } from '@/types/proposals';
-import { ProposalInfo } from '@/types/proposal';
+import { Proposal } from '@/types/proposal';
 import router from '@/router';
-import { Notice } from '@/types/notice';
+import { StudioNotice } from '@/types/studioNotice';
 import { instance } from '@/apis';
 
 // 이모티콘 파일 업로드
@@ -24,7 +23,7 @@ export async function fetchEmojiUpload(
 // 승인 정보들을 가져온다.
 export async function fetchProposalsInfo(
   username: string,
-): Promise<ProposalsInfo[]> {
+): Promise<Proposal[]> {
   const { data } = await instance.get(
     `store/${username}/emoji/products/confirm`,
   );
@@ -35,7 +34,7 @@ export async function fetchProposalsInfo(
 export async function fetchProposalInfo(
   username: string,
   id: number,
-): Promise<ProposalInfo> {
+): Promise<Proposal> {
   const { data } = await instance.get(
     `store/${username}/emoji/products/${id}/confirm`,
   );
@@ -46,7 +45,7 @@ export async function fetchProposalInfo(
 // 공지사항 전체 정보를 가져온다.
 export async function fetchStudioNoticesInfo(
   username: string,
-): Promise<Notice[]> {
+): Promise<StudioNotice[]> {
   const { data } = await instance.get(`store/${username}/studio/notices`);
 
   return data;

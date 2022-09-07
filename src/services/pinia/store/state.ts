@@ -1,12 +1,11 @@
-import { ProposalsInfo } from '@/types/proposals';
-import { ProposalInfo } from '@/types/proposal';
-import { Notice } from '@/types/notice';
+import { Proposal } from '@/types/proposal';
+import { StudioNotice } from '@/types/studioNotice';
 
 const state = {
-  proposalsInfo: [] as ProposalsInfo[],
-  proposalInfo: {} as ProposalInfo,
+  proposalsInfo: [] as Proposal[],
+  proposalInfo: {} as Proposal,
 
-  noticesInfo: [] as Notice[],
+  noticesInfo: [] as StudioNotice[],
   noticeInfo: {} as any,
 };
 

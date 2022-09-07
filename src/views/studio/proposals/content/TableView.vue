@@ -37,44 +37,48 @@
 import { defineComponent, computed, ref } from '@vue/composition-api';
 import { useStore } from '@/services/pinia/store';
 import router from '@/router';
-import { IsConfirm2, ProposalsMatchedInfo } from '@/types/proposals';
+import { storeToRefs } from 'pinia';
+import { Proposal } from '@/types/proposal';
 
 export default defineComponent({
   name: 'ProposalsTableView',
   setup() {
     const store = useStore();
+    const { confirmTableMatched } = storeToRefs(store);
 
-    const proposals = computed(() => store.confirmTableMatched);
+    const proposals = computed(() => confirmTableMatched.value);
     const copy_proposals = ref([...proposals.value]);
 
-    const onChange = (e: any) => {
-      function copy(array: ProposalsMatchedInfo[]) {
+    const onChange = (e: Event) => {
+      const target = e.target as HTMLInputElement;
+
+      function copy(array: Proposal[]) {
         copy_proposals.value = [...array];
       }
 
-      function matched(match_confirm: number) {
+      function matched(match_confirm: string) {
         return proposals.value.filter((proposal) => {
           const is_confirm = proposal.is_confirm as string;
 
-          if (is_confirm == IsConfirm2[match_confirm]) return proposal;
+          if (is_confirm == match_confirm) return proposal;
         });
       }
 
-      switch (e.target.value) {
+      switch (target.value) {
         case 'ALL':
           copy(proposals.value);
           break;
         case 'SUBMISSION_COMPLETE':
-          copy(matched(0));
+          copy(matched('제출완료'));
           break;
         case 'UNDER_REVIEW':
-          copy(matched(1));
+          copy(matched('심사중'));
           break;
         case 'NOT_APPROVED':
-          copy(matched(2));
+          copy(matched('미승인'));
           break;
         case 'APPROVED':
-          copy(matched(3));
+          copy(matched('승인'));
           break;
       }
     };

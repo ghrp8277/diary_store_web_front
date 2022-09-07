@@ -1,4 +1,5 @@
-import { IsConfirm, ProposalsMatchedInfo } from '@/types/proposals';
+import { Proposal } from '@/types/proposal';
+import { IsConfirm } from '@/types/emojiConfirm';
 import { State } from '@/services/pinia/store/state';
 import moment from 'moment';
 
@@ -9,33 +10,32 @@ const getters = {
    * @returns { ProposalsMatchedInfo[] }
    */
   confirmTableMatched: (state: State) => {
-    const array: ProposalsMatchedInfo[] = [];
+    const array: Proposal[] = [];
 
     for (const proposal of state.proposalsInfo) {
-      const result = proposal as ProposalsMatchedInfo;
+      const is_confirm = proposal.is_confirm as number;
 
-      const is_confirm = Number(proposal.is_confirm);
       const index = IsConfirm[is_confirm];
 
       switch (index) {
         case 'SUBMISSION_COMPLETE':
-          result.is_confirm = '제출완료';
+          proposal.is_confirm = '제출완료';
           break;
         case 'UNDER_REVIEW':
-          result.is_confirm = '심사중';
+          proposal.is_confirm = '심사중';
           break;
         case 'NOT_APPROVED':
-          result.is_confirm = '미승인';
+          proposal.is_confirm = '미승인';
           break;
         case 'APPROVED':
-          result.is_confirm = '승인';
+          proposal.is_confirm = '승인';
           break;
       }
 
       const dateFormat = moment(proposal.createdAt).format('YYYY-MM-DD');
-      result.createdAt = dateFormat;
+      proposal.createdAt = dateFormat;
 
-      array.push(result);
+      array.push(proposal);
     }
 
     return array;
@@ -46,7 +46,7 @@ const getters = {
    * @returns { string }
    */
   confirmMatched: (state: State) => {
-    const is_confirm = state.proposalInfo.is_confirm;
+    const is_confirm = state.proposalInfo.is_confirm as number;
 
     const index = IsConfirm[is_confirm];
 

@@ -1,4 +1,4 @@
-export interface Notice {
+export interface StudioNotice {
   id: number;
   is_important: boolean;
   title: string;

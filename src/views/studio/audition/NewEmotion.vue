@@ -273,19 +273,20 @@ export default defineComponent({
 
     return {
       commentCnt,
-      typing: (e: any) => {
+      typing: (e: Event) => {
         const maxCnt = 200;
-        const count = e.target.value.length;
+        const target = e.target as HTMLInputElement;
+        const count = target.value.length;
 
         if (count > maxCnt) {
-          const oldValue = e.target.value.substr(0, maxCnt);
-          e.target.value = oldValue;
+          const oldValue = target.value.substr(0, maxCnt);
+          target.value = oldValue;
         } else {
           commentCnt.value = count;
         }
       },
       isTagDisabled,
-      onChange: (e: any) => {
+      onChange: () => {
         isTagDisabled.value = false;
       },
       files,

@@ -33,6 +33,11 @@ const routes: Array<RouteConfig> = [
     ],
   },
   {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/LoginView.vue'),
+  },
+  {
     path: '*',
     redirect: '/404',
   },

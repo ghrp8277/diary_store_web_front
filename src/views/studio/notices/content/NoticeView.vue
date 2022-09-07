@@ -23,11 +23,11 @@ import {
   onMounted,
   toRefs,
   computed,
-  watch,
 } from '@vue/composition-api';
 import { useStore } from '@/services/pinia/store';
 import moment from 'moment';
-import { Notice } from '@/types/notice';
+import { StudioNotice } from '@/types/studioNotice';
+import { storeToRefs } from 'pinia';
 
 export default defineComponent({
   name: 'NoticeView',
@@ -40,14 +40,15 @@ export default defineComponent({
   setup(props) {
     const store = useStore();
     const { id } = toRefs(props);
+    const { noticeInfo } = storeToRefs(store);
 
     onMounted(async () => {
       await store.FETCH_STUDIO_NOTICE_INFO('test', id.value);
     });
 
     return {
-      htmlBind: computed(() => store.noticeInfo.html),
-      notice: computed(() => store.noticeInfo.notice as Notice),
+      htmlBind: computed(() => noticeInfo.value.html),
+      notice: computed(() => noticeInfo.value.notice as StudioNotice),
       moment,
     };
   },
