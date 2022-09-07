@@ -3,29 +3,37 @@ import { RouteConfig } from 'vue-router';
 const routes: Array<RouteConfig> = [
   {
     path: '',
-    name: 'content',
+    name: 'proposals-content',
     components: {
       exist: () => import('@/views/studio/proposals/ContentView.vue'),
       not: () => import('@/views/studio/proposals/NotContentView.vue'),
     },
-    props: true,
     redirect: {
-      name: 'table',
+      name: 'proposals-table',
     },
     children: [
       {
         path: '',
-        name: 'table',
+        name: 'proposals-table',
         component: () =>
           import('@/views/studio/proposals/content/TableView.vue'),
-        props: true,
       },
       {
         path: ':id',
         name: 'proposal',
         component: () =>
           import('@/views/studio/proposals/content/ProposalView.vue'),
-        props: true,
+        props: (route) => {
+          const id = Number.parseInt(route.params.id);
+
+          if (Number.isNaN(id)) {
+            return 0;
+          }
+
+          return {
+            id,
+          };
+        },
       },
     ],
   },

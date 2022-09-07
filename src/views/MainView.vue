@@ -33,18 +33,16 @@
       </nav>
     </header>
     <!-- 본문 내용 -->
-    <main :class="{ 'box-show': isShow }">
-      <router-view v-slot="{ Component, route }">
-        <Transition name="slide" mode="out-in">
-          <component :is="Component" :key="route.path" />
-        </Transition>
-      </router-view>
+    <main>
+      <transition name="slide-fade" mode="out-in">
+        <router-view />
+      </transition>
     </main>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, ref } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'MainView',
@@ -135,23 +133,31 @@ li {
   width: 100%;
 }
 
-.box-show {
-  pointer-events: none;
-  // 드래그 금지
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.slide-enter-active,
-.slide-leave-active {
-  transition: opacity 1s, transform 1s;
-}
-
-.slide-enter-from,
-.slide-leave-to {
+.fade-enter {
   opacity: 0;
-  transform: translateX(-30%);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease-out;
+}
+
+.fade-leave-to {
+  opacity: 0;
+}
+
+.slide-fade-enter {
+  transform: translateX(10px);
+  opacity: 0;
+}
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.2s ease;
+}
+
+.slide-fade-leave-to {
+  transform: translateX(-10px);
+  opacity: 0;
 }
 </style>

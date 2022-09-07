@@ -54,24 +54,30 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, computed } from '@vue/composition-api';
+import {
+  defineComponent,
+  onMounted,
+  computed,
+  toRefs,
+} from '@vue/composition-api';
 import { useStore } from '@/services/pinia/store';
 
 export default defineComponent({
   name: 'ProposalView',
   props: {
     id: {
-      type: String,
+      type: Number,
       required: true,
     },
   },
   setup(props) {
     const store = useStore();
+    const { id } = toRefs(props);
 
     const proposalInfo = computed(() => store.proposalInfo);
 
     onMounted(async () => {
-      await store.FETCH_PROPOSAL_INFO('test', Number(props.id));
+      await store.FETCH_PROPOSAL_INFO('test', id.value);
 
       const progressbarTag = document.getElementsByClassName('progressbar')[0];
 

@@ -34,7 +34,15 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '*',
-    component: () => import('@/views/NotFoundPage.vue'),
+    redirect: '/404',
+  },
+  {
+    path: '/404',
+    component: () => import('@/views/error/404.vue'),
+  },
+  {
+    path: '/500',
+    component: () => import('@/views/error/500.vue'),
   },
 ];
 

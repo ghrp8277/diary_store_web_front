@@ -1,26 +1,28 @@
 <template>
-  <div class="box-container">
-    <span class="close-button" @click="closeBox"
-      ><font-awesome-icon icon="fa-xmark"
-    /></span>
+  <transition name="modal" appear>
+    <div class="box-container modal-window">
+      <span class="close-button" @click="closeBox"
+        ><font-awesome-icon icon="fa-xmark"
+      /></span>
 
-    <div class="box-content">
-      <span class="message-box">{{ message }}</span>
-      <button class="btn-confirm" @click="closeBox">확인</button>
+      <div class="box-content">
+        <span class="message-box">{{ message }}</span>
+        <button class="btn-confirm" @click="closeBox">확인</button>
+      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent } from '@vue/composition-api';
-import { useStore } from '@/services/pinia';
+import { useStore } from '@/services/pinia/main';
 
 export default defineComponent({
   name: 'MessageBox',
   setup() {
     const store = useStore();
-    const closeBox = computed(() => store.messageBoxState.confirm);
-    const message = computed(() => store.messageBoxState.message);
+    const closeBox = computed(() => store.boxState.confirm);
+    const message = computed(() => store.boxState.message);
     return { closeBox, message };
   },
 });
@@ -95,5 +97,31 @@ export default defineComponent({
   color: #2d2e32;
 
   font-size: 13px;
+}
+
+// 오버레이 트랜지션
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.4s;
+
+  // 오버레이에 포함되어 있는 모달 윈도의 트랜지션
+  .modal-window {
+    transition: opacity 0.4s, transform 0.4s;
+  }
+}
+
+// 딜레이가 적용된 모달 윈도가 제거된 후에 오버레이가 사라짐
+.modal-leave-active {
+  transition: opacity 0.4s;
+}
+
+.modal-enter,
+.modal-leave-to {
+  opacity: 0;
+
+  .modal-window {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
 }
 </style>

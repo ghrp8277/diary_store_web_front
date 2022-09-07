@@ -1,13 +1,14 @@
 <template>
-  <div v-if="!isLoading">
+  <div v-if="notice">
     <div class="title-head">
       <div class="wrap-content">
         <span v-if="notice.is_important" class="txt-tag">중요</span>
         <strong>{{ notice.title }}</strong>
       </div>
-      <span class="txt-date">{{ toStringByFormatting(notice.createdAt) }}</span>
+      <span class="txt-date">{{
+        moment(notice.createdAt).format('YYYY-MM-DD')
+      }}</span>
     </div>
-
     <div class="content" v-html="htmlBind"></div>
 
     <router-link :to="{ name: 'notices' }" tag="div" class="paging-recent">
@@ -20,72 +21,34 @@
 import {
   defineComponent,
   onMounted,
-  ref,
   toRefs,
   computed,
+  watch,
 } from '@vue/composition-api';
-import apis from '@/apis';
-import { useStore } from '@/services/pinia';
+import { useStore } from '@/services/pinia/store';
+import moment from 'moment';
+import { Notice } from '@/types/notice';
 
 export default defineComponent({
   name: 'NoticeView',
   props: {
     id: {
-      type: String,
-      required: true,
-    },
-    file_name: {
-      type: String,
+      type: Number,
       required: true,
     },
   },
   setup(props) {
-    const { apiModule } = apis();
-    const { id, file_name } = toRefs(props);
-    const htmlBind = ref('');
-
-    const notice = ref({
-      id: id.value,
-      is_important: false,
-      file_name: file_name.value,
-      title: '',
-      createdAt: '',
-    });
-
-    function toStringByFormatting(source: string, delimiter = '-') {
-      const date = new Date(source);
-      function leftPad(value: any) {
-        if (value >= 10) {
-          return value;
-        }
-
-        return `0${value}`;
-      }
-
-      const year = date.getFullYear();
-      const month = leftPad(date.getMonth() + 1);
-      const day = leftPad(date.getDate());
-
-      return [year, month, day].join(delimiter);
-    }
+    const store = useStore();
+    const { id } = toRefs(props);
 
     onMounted(async () => {
-      const { data } = await apiModule.storeApiModule.fetchStudioNoticeInfo(
-        'test',
-        Number(id.value),
-        file_name.value,
-      );
-
-      htmlBind.value = data.html;
-
-      notice.value = data.notice;
+      await store.FETCH_STUDIO_NOTICE_INFO('test', id.value);
     });
 
     return {
-      htmlBind: computed(() => htmlBind.value),
-      notice: computed(() => notice.value),
-      toStringByFormatting,
-      isLoading: computed(() => useStore().isLoading),
+      htmlBind: computed(() => store.noticeInfo.html),
+      notice: computed(() => store.noticeInfo.notice as Notice),
+      moment,
     };
   },
 });

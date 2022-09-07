@@ -124,21 +124,17 @@
 
 <script lang="ts">
 import {
-  computed,
   defineComponent,
-  h,
   onMounted,
   reactive,
   ref,
 } from '@vue/composition-api';
-import { useStore } from '@/services/pinia';
-import apis from '@/apis';
-import router from '@/router';
+import { useStore } from '@/services/pinia/main';
+import { fetchEmojiUpload } from '@/apis/store';
 
 export default defineComponent({
   name: 'NewEmotionView',
   setup() {
-    const { apiModule } = apis();
     const store = useStore();
     const files = reactive<{ src: string; file: any }[]>([]);
     const commentCnt = ref(0);
@@ -181,7 +177,7 @@ export default defineComponent({
               files[index].file = file;
             } else {
               target.value = '';
-              store.messageBoxSetState(true, '이미지 사이즈를 확인해주세요.');
+              store.setBoxState(true, '이미지 사이즈를 확인해주세요.');
             }
           });
         }
@@ -199,7 +195,7 @@ export default defineComponent({
 
         // 파일 크기 체크
         if (1024 * 150 < file.size) {
-          store.messageBoxSetState(
+          store.setBoxState(
             true,
             `${file.name} 이미지 크기가 너무 큽니다. 최대 이미지 크기는 150kb 입니다.`,
           );
@@ -250,7 +246,7 @@ export default defineComponent({
 
         // 이미지 파일 개수 체크
         if (formdata.getAll('files').length > 0) {
-          await apiModule.storeApiModule.fetchEmojiUpload('test', formdata);
+          await fetchEmojiUpload('test', formdata);
         } else {
           alert(
             `이미지 파일을 추가해 주세요 \n현재 선택된 이미지 파일 갯수: ${

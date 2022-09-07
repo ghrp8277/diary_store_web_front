@@ -12,9 +12,8 @@ const routes: Array<RouteConfig> = [
     path: 'proposals',
     name: 'proposals',
     component: () => import('@/views/studio/ProposalsView.vue'),
-    props: true,
     redirect: {
-      name: 'content',
+      name: 'proposals-content',
     },
     children: proposalsRoute,
   },
@@ -22,7 +21,6 @@ const routes: Array<RouteConfig> = [
     path: 'notices',
     name: 'notices',
     component: () => import('@/views/studio/NoticesView.vue'),
-    props: true,
     redirect: {
       name: 'notices-content',
     },

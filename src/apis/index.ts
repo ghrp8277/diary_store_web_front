@@ -1,24 +1,17 @@
-import store from './store';
+import axios from 'axios';
+import { setInterceptors } from './common/interceptors';
+import { setAxiosSetting } from './common/settings';
 
-interface Api {
-  [Key: string]: string;
+function createInstance() {
+  const instance = axios.create({
+    baseURL: process.env.VUE_APP_API_BASE_URL,
+  });
+
+  setAxiosSetting(instance);
+
+  return setInterceptors(instance);
 }
 
-export default () => {
-  const baseUrl = 'http://192.168.0.212';
-  const basePort = '3000';
-  const version = 'v1';
-  const apis: Api = {
-    storeURL: `${baseUrl}:${basePort}/${version}/store`,
-  };
+const instance = createInstance();
 
-  const { storeApiModule } = store(apis.storeURL);
-
-  const apiModule = {
-    storeApiModule,
-  };
-
-  return {
-    apiModule,
-  };
-};
+export { instance };

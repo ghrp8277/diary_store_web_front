@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view :class="{ loading: isLoading, 'layer-dimmed': isShow }" />
+    <router-view :class="{ loading: isLoading, 'box-show': isShow }" />
     <div :class="{ 'layer-dimmed': isShow }"></div>
     <message-box v-if="isShow" />
     <loading v-if="isLoading" />
@@ -11,7 +11,7 @@
 import { defineComponent, computed } from '@vue/composition-api';
 import Loading from '@/components/Loading.vue';
 import MessageBox from '@/components/MessageBox.vue';
-import { useStore } from '@/services/pinia';
+import { useStore } from '@/services/pinia/main';
 
 export default defineComponent({
   name: 'App',
@@ -23,7 +23,8 @@ export default defineComponent({
     const store = useStore();
 
     return {
-      isShow: computed(() => store.messageBoxState.isMessageBoxShow),
+      store,
+      isShow: computed(() => store.boxState.isShow),
       isLoading: computed(() => store.isLoading),
     };
   },
@@ -68,5 +69,14 @@ body {
   bottom: 0;
   background: rgba(0, 0, 0, 0.33);
   z-index: 1000;
+}
+
+.box-show {
+  pointer-events: none;
+  // 드래그 금지
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 </style>

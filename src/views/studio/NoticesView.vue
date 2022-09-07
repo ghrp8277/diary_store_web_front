@@ -1,18 +1,33 @@
 <template>
   <div class="notices">
-    <h1 class="notices-title">공지 사항</h1>
-
-    <router-view />
+    <router-view :name="name" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import {
+  defineComponent,
+  onMounted,
+  ref,
+  computed,
+} from '@vue/composition-api';
+import { useStore } from '@/services/pinia/store';
 
 export default defineComponent({
-  name: 'NoticeView',
+  name: 'NoticesView',
   setup() {
-    return {};
+    const store = useStore();
+    const name = ref('');
+
+    onMounted(async () => {
+      await store.FETCH_STUDIO_NOTICES_INFO('test');
+
+      if (store.noticesInfo.length > 0) {
+        name.value = 'exist';
+      } else name.value = 'not';
+    });
+
+    return { name: computed(() => name.value) };
   },
 });
 </script>
