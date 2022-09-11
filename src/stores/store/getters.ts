@@ -1,8 +1,11 @@
 import { Proposal } from '@/types/proposal';
 import { IsConfirm } from '@/types/emojiConfirm';
-import { State } from '@/services/pinia/store/state';
+import { State } from './state';
 import moment from 'moment';
 
+/*
+ ** GETTERS
+ */
 const getters = {
   /**
    * proposals view에 table 데이터를 매칭시킨다.

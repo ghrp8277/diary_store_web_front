@@ -1,15 +1,18 @@
 import { defineStore } from 'pinia';
 import { reactive, ref } from '@vue/composition-api';
-import { fetchLogin } from '@/apis/user';
+import { getAccessFromCookie, getUserFromCookie } from '@/services/cookies';
 
 export const useStore = defineStore('main', () => {
+  const username = ref(getUserFromCookie() || '');
+  const token = ref(getAccessFromCookie() || '');
+
+  const isLoading = ref(false);
+
   const boxState = reactive({
     isShow: false,
     message: '',
     confirm: null as unknown,
   });
-
-  const isLoading = ref(false);
 
   function setBoxState(
     isShow: boolean,
@@ -23,15 +26,14 @@ export const useStore = defineStore('main', () => {
     boxState.confirm = confirm;
   }
 
-  async function login(username: string, password: string) {
-    const data = await fetchLogin(username, password);
-    localStorage.setItem('token', JSON.stringify(data));
-  }
-
   return {
+    username,
+    token,
+    isLogin: username.value.length == 0,
     isLoading,
     boxState,
     setBoxState,
-    login,
   };
 });
+
+export type mainStoreType = typeof useStore;

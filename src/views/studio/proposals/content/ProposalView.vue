@@ -30,23 +30,23 @@
 
       <dl>
         <dt>이모티콘 상품명</dt>
-        <dd>{{ proposalInfo.product_name }}</dd>
+        <dd>{{ proposal.product_name }}</dd>
       </dl>
 
       <dl>
         <dt>이모티콘 카테고리</dt>
-        <dd>{{ proposalInfo.category }}</dd>
+        <dd>{{ proposal.category }}</dd>
       </dl>
 
       <dl>
         <dt>이모티콘 태그</dt>
-        <dd>{{ proposalInfo.tag }}</dd>
+        <dd>{{ proposal.tag }}</dd>
       </dl>
 
       <dl>
         <dt>이모티콘 설명</dt>
         <dd>
-          {{ proposalInfo.comment }}
+          {{ proposal.comment }}
         </dd>
       </dl>
     </div>
@@ -60,7 +60,8 @@ import {
   computed,
   toRefs,
 } from '@vue/composition-api';
-import { useStore } from '@/services/pinia/store';
+import { useStore } from '@/stores/store';
+import { storeToRefs } from 'pinia';
 
 export default defineComponent({
   name: 'ProposalView',
@@ -72,9 +73,11 @@ export default defineComponent({
   },
   setup(props) {
     const store = useStore();
+    const { proposalInfo, confirmMatched, createAtToMoment } =
+      storeToRefs(store);
     const { id } = toRefs(props);
 
-    const proposalInfo = computed(() => store.proposalInfo);
+    const proposal = computed(() => proposalInfo.value);
 
     onMounted(async () => {
       await store.FETCH_PROPOSAL_INFO('test', id.value);
@@ -82,7 +85,7 @@ export default defineComponent({
       const progressbarTag = document.getElementsByClassName('progressbar')[0];
 
       for (let [index, node] of progressbarTag.childNodes.entries()) {
-        const is_confirm = Number(proposalInfo.value.is_confirm);
+        const is_confirm = Number(proposal.value.is_confirm);
 
         if (index <= is_confirm) {
           const tag = node as any;
@@ -93,9 +96,9 @@ export default defineComponent({
     });
 
     return {
-      proposalInfo,
-      confirmMatched: computed(() => store.confirmMatched),
-      createAtToMoment: computed(() => store.createAtToMoment),
+      proposal,
+      confirmMatched: computed(() => confirmMatched.value),
+      createAtToMoment: computed(() => createAtToMoment.value),
     };
   },
 });

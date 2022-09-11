@@ -11,7 +11,8 @@
 import { defineComponent, computed } from '@vue/composition-api';
 import Loading from '@/components/Loading.vue';
 import MessageBox from '@/components/MessageBox.vue';
-import { useStore } from '@/services/pinia/main';
+import { useStore } from '@/stores/main';
+import { storeToRefs } from 'pinia';
 
 export default defineComponent({
   name: 'App',
@@ -22,10 +23,12 @@ export default defineComponent({
   setup() {
     const store = useStore();
 
+    const { isLoading, boxState } = storeToRefs(store);
+
     return {
       store,
-      isShow: computed(() => store.boxState.isShow),
-      isLoading: computed(() => store.isLoading),
+      isShow: computed(() => boxState.value.isShow),
+      isLoading: computed(() => isLoading.value),
     };
   },
 });

@@ -1,6 +1,9 @@
 import { Proposal } from '@/types/proposal';
 import { StudioNotice } from '@/types/studioNotice';
 
+/*
+ ** STATES
+ */
 const state = {
   proposalsInfo: [] as Proposal[],
   proposalInfo: {} as Proposal,

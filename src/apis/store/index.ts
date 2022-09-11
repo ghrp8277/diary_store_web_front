@@ -3,8 +3,6 @@ import router from '@/router';
 import { StudioNotice } from '@/types/studioNotice';
 import { instance } from '@/apis';
 
-console.log(instance);
-
 // 이모티콘 파일 업로드
 export async function fetchEmojiUpload(
   username: string,

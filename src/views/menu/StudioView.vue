@@ -4,8 +4,8 @@
       <!-- 유저 정보들 -->
       <div class="user-info">
         <img class="user-img" src="@/assets/logo.png" />
-        <h4 class="user-id">test@test.com</h4>
-        <button class="logout">로그아웃</button>
+        <h4 class="user-id">{{ username }}</h4>
+        <button class="logout" @click="logout">로그아웃</button>
       </div>
       <!-- 메뉴 버튼들 -->
       <div class="menus">
@@ -32,9 +32,35 @@
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
+import router from '@/router';
+import { useStore } from '@/stores/main';
+import { deleteCookie } from '@/services/cookies';
+import { storeToRefs } from 'pinia';
 
 export default defineComponent({
   name: 'StudioView',
+  setup() {
+    const store = useStore();
+    const { username, token } = storeToRefs(store);
+
+    function logout() {
+      username.value = '';
+      token.value = '';
+
+      deleteCookie('til_access');
+      deleteCookie('til_refresh');
+      deleteCookie('til_user');
+
+      router.push({
+        name: 'login',
+      });
+    }
+
+    return {
+      username,
+      logout,
+    };
+  },
 });
 </script>
 

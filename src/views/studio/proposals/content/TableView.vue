@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref } from '@vue/composition-api';
-import { useStore } from '@/services/pinia/store';
+import { useStore } from '@/stores/store';
 import router from '@/router';
 import { storeToRefs } from 'pinia';
 import { Proposal } from '@/types/proposal';

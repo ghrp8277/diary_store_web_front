@@ -129,7 +129,7 @@ import {
   reactive,
   ref,
 } from '@vue/composition-api';
-import { useStore } from '@/services/pinia/main';
+import { useStore } from '@/stores/main';
 import { fetchEmojiUpload } from '@/apis/store';
 
 export default defineComponent({

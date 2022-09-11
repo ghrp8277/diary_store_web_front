@@ -5,18 +5,8 @@ import {
   AxiosError,
 } from 'axios';
 import router from '@/router';
-import { useStore } from '@/services/pinia/main';
 
 const DEBUG = process.env.NODE_ENV === 'development';
-const store = useStore();
-// loading ui
-const startLoading = () => {
-  store.isLoading = true;
-};
-
-const endLoading = () => {
-  store.isLoading = false;
-};
 
 export function setInterceptors(instance: AxiosInstance) {
   instance.interceptors.request.use(
@@ -28,17 +18,15 @@ export function setInterceptors(instance: AxiosInstance) {
                       [headers] [${JSON.stringify(config.headers)}]
                   `);
       }
-      startLoading();
+
       return config;
     },
     (error: AxiosError): Promise<AxiosError> => {
       if (DEBUG) {
         console.error(`[request error] [${JSON.stringify(error)}]`);
       }
-      console.log(error.code);
-      if (error.code == 'ERR_NETWORK') router.push({ path: '/500' });
-      endLoading();
-      return Promise.reject(error);
+
+      return Promise.reject(error.response);
     },
   );
 
@@ -52,10 +40,12 @@ export function setInterceptors(instance: AxiosInstance) {
                       [data] [${JSON.stringify(response.data)}]
                   `);
       }
-      endLoading();
+
       return response;
     },
     (error: AxiosError): Promise<AxiosError> => {
+      const status = error.response?.status;
+
       if (DEBUG) {
         console.error(`
                       [method] [${error.response?.config.method}]
@@ -64,9 +54,9 @@ export function setInterceptors(instance: AxiosInstance) {
                   `);
       }
 
-      if (error.code == 'ERR_NETWORK') router.push({ path: '/500' });
-      endLoading();
-      return Promise.reject({ error });
+      if (status == 500) router.push({ path: '/500' });
+
+      return Promise.reject(error.response);
     },
   );
 

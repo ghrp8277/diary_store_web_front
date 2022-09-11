@@ -1,8 +1,21 @@
 import Vue from 'vue';
-import VueRouter, { RouteConfig } from 'vue-router';
+import VueRouter, { NavigationGuardNext, Route, RouteConfig } from 'vue-router';
 import studioRoute from '@/router/studio';
 
 Vue.use(VueRouter);
+
+export function requireAuth(
+  to: Route,
+  from: Route,
+  next: NavigationGuardNext<Vue>,
+) {
+  console.log(to.meta);
+  if (to.meta?.authRequired) {
+    next('/login');
+    return;
+  }
+  next();
+}
 
 const routes: Array<RouteConfig> = [
   {
@@ -25,6 +38,8 @@ const routes: Array<RouteConfig> = [
         path: 'studio',
         name: 'studio',
         component: () => import('@/views/menu/StudioView.vue'),
+        meta: { authRequired: true },
+        beforeEnter: requireAuth,
         redirect: {
           name: 'audition',
         },

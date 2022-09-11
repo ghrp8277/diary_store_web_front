@@ -27,13 +27,16 @@
 <script lang="ts">
 import { computed, defineComponent } from '@vue/composition-api';
 import router from '@/router';
-import { useStore } from '@/services/pinia/store';
+import { useStore } from '@/stores/store';
 import moment from 'moment';
+import { storeToRefs } from 'pinia';
 
 export default defineComponent({
   name: 'NoticesTableView',
   setup() {
     const store = useStore();
+
+    const { noticesInfo } = storeToRefs(store);
 
     function onClick(
       e: Event,
@@ -54,7 +57,7 @@ export default defineComponent({
     }
 
     return {
-      notices: computed(() => store.noticesInfo),
+      notices: computed(() => noticesInfo.value),
       moment,
       onClick,
     };

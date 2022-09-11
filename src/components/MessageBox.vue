@@ -15,14 +15,18 @@
 
 <script lang="ts">
 import { computed, defineComponent } from '@vue/composition-api';
-import { useStore } from '@/services/pinia/main';
+import { useStore } from '@/stores/main';
+import { storeToRefs } from 'pinia';
 
 export default defineComponent({
   name: 'MessageBox',
   setup() {
     const store = useStore();
-    const closeBox = computed(() => store.boxState.confirm);
-    const message = computed(() => store.boxState.message);
+    const { boxState } = storeToRefs(store);
+
+    const closeBox = computed(() => boxState.value.confirm);
+    const message = computed(() => boxState.value.message);
+
     return { closeBox, message };
   },
 });

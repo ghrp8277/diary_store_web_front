@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="content">
-      <form class="login-form" @submit="onSubmit">
+      <form class="login-form" @submit.prevent="onSubmit">
         <div class="form-item">
           <label for="username">아이디</label>
           <input type="text" id="username" name="username" autocomplete="off" />
@@ -19,27 +19,66 @@
           <span>로그인</span>
         </button>
       </form>
+      <div class="login-message">{{ message }}</div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
-import { useStore } from '@/services/pinia/main';
+import { defineComponent, ref } from '@vue/composition-api';
+import { fetchLogin } from '@/apis/user';
+import router from '@/router';
+import {
+  saveAccessTokenToCookie,
+  saveRefreshTokenToCookie,
+  saveUserToCookie,
+} from '@/services/cookies';
+import { useStore } from '@/stores/main';
+import { storeToRefs } from 'pinia';
 
 export default defineComponent({
   setup() {
     const store = useStore();
+    const message = ref('');
+
+    const { username, token } = storeToRefs(store);
 
     async function onSubmit(e: Event) {
       const target = e.target as HTMLFormElement;
 
-      const username = target.username.value;
-      const password = target.password.value;
+      const name = target.username.value as string;
+      const password = target.password.value as string;
 
-      await store.login(username, password);
+      if (name.length == 0) {
+        message.value = '아이디를 입력해 주세요.';
+      } else if (password.length == 0) {
+        message.value = '비밀번호를 입력해 주세요.';
+      } else {
+        try {
+          const data = await fetchLogin(name, password);
+
+          // pinia에 저장
+          username.value = name;
+          token.value = data.accessToken;
+
+          // 쿠키에 토큰 및 유저명 저장
+          saveAccessTokenToCookie(data.accessToken);
+          saveRefreshTokenToCookie(data.refreshToken);
+          saveUserToCookie(name);
+
+          // 메인으로 이동
+          router.push({
+            name: 'main',
+          });
+        } catch (error: any) {
+          if (error.status == 401) {
+            message.value =
+              '등록되지 않은 아이디이거나 아이디 또는 비밀번호를 잘못 입력했습니다.';
+          }
+        }
+      }
     }
-    return { onSubmit };
+    return { onSubmit, message };
   },
 });
 </script>
@@ -121,5 +160,11 @@ button {
 
 button:hover {
   background-color: rgba(#717274, 0.9);
+}
+
+.login-message {
+  color: red;
+
+  text-align: left;
 }
 </style>

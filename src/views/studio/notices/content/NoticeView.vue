@@ -24,7 +24,7 @@ import {
   toRefs,
   computed,
 } from '@vue/composition-api';
-import { useStore } from '@/services/pinia/store';
+import { useStore } from '@/stores/store';
 import moment from 'moment';
 import { StudioNotice } from '@/types/studioNotice';
 import { storeToRefs } from 'pinia';
