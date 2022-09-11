@@ -35,6 +35,7 @@ export function setInterceptors(instance: AxiosInstance) {
       if (DEBUG) {
         console.error(`[request error] [${JSON.stringify(error)}]`);
       }
+      console.log(error.code);
       if (error.code == 'ERR_NETWORK') router.push({ path: '/500' });
       endLoading();
       return Promise.reject(error);

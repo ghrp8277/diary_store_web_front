@@ -12,6 +12,19 @@ function createInstance() {
   return setInterceptors(instance);
 }
 
-const instance = createInstance();
+function createInstanceWithAuth(url: string) {
+  const instance = axios.create({
+    baseURL: `${process.env.VUE_APP_API_BASE_URL}${url}/`,
+  });
 
-export { instance };
+  setAxiosSetting(instance);
+
+  return setInterceptors(instance);
+}
+
+// export const instance = createInstance();
+
+export const instance = {
+  store: createInstanceWithAuth('store'),
+  auth: createInstanceWithAuth('auth'),
+};

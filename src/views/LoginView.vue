@@ -1,15 +1,22 @@
 <template>
   <div class="login-container">
     <div class="content">
-      <form method="POST" @submit="onSubmit">
-        <label for="username">아이디</label>
-        <input type="text" id="username" name="username" autocomplete="off" />
-
-        <label for="password">비밀번호</label>
-        <input type="text" id="password" name="password" autocomplete="off" />
-
+      <form class="login-form" @submit="onSubmit">
+        <div class="form-item">
+          <label for="username">아이디</label>
+          <input type="text" id="username" name="username" autocomplete="off" />
+        </div>
+        <div class="form-item">
+          <label for="password">비밀번호</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            autocomplete="off"
+          />
+        </div>
         <button type="submit" id="connect" class="btn-connect">
-          <span>Connect</span>
+          <span>로그인</span>
         </button>
       </form>
     </div>
@@ -18,15 +25,30 @@
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
+import { useStore } from '@/services/pinia/main';
 
 export default defineComponent({
   setup() {
-    return {};
+    const store = useStore();
+
+    async function onSubmit(e: Event) {
+      const target = e.target as HTMLFormElement;
+
+      const username = target.username.value;
+      const password = target.password.value;
+
+      await store.login(username, password);
+    }
+    return { onSubmit };
   },
 });
 </script>
 
 <style lang="scss" scoped>
+.login-container {
+  background-color: #e4e4e4;
+}
+
 .content {
   position: absolute;
   top: 50%;
@@ -34,58 +56,70 @@ export default defineComponent({
   z-index: 999;
   text-align: center;
   padding: 60px 30px;
-  width: 380px;
+  width: 800px;
+  height: 400px;
   transform: translate(-50%, -50%);
   background: rgba(255, 255, 255, 0.04);
-  box-shadow: -1px 4px 28px 0px rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(0, 0, 0, 0.75);
+  // box-shadow: -1px 4px 28px 0px rgba(0, 0, 0, 0.75);
 }
 
-.content > form > label {
-  width: 60px;
+.content > form {
+  display: block;
+
+  padding: 0 200px 0 100px;
+}
+
+.form-item {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.form-item > label {
+  text-align: left;
+  width: 70px;
+  height: 35px;
+  font-family: 'Avenir';
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 38px;
+}
+
+.form-item > input {
+  width: 100%;
   height: 35px;
   font-family: 'Avenir';
   font-style: normal;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 22px;
-  color: #ffbb70;
-  margin-top: 30px;
-  margin-left: 10px;
-}
-
-.content > form > input {
-  width: 280px;
-  height: 35px;
-  font-family: 'Avenir';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 22px;
-  color: #ffbb70;
-  margin-top: 30px;
-  margin-left: 10px;
 }
 
 input:focus {
   outline: none;
-  box-shadow: 0px 0px 15px #ffbb70;
 }
 
 button {
-  float: right;
-  height: 30px;
-  background: #9a86fd;
-  border-radius: 25px;
+  position: absolute;
+
+  top: 60px;
+  right: 50px;
+
+  font-size: 13px;
+  padding: 20px;
+  height: 90px;
+  width: 110px;
+  background: #717274;
+
   color: white;
   border: 0;
-  margin-top: 30px;
-  margin-right: 30px;
   cursor: pointer;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   transition: all 0.5s;
 }
 
 button:hover {
-  box-shadow: 0px 0px 15px #ffbb70;
+  background-color: rgba(#717274, 0.9);
 }
 </style>

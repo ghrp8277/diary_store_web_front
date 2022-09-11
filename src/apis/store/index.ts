@@ -3,14 +3,16 @@ import router from '@/router';
 import { StudioNotice } from '@/types/studioNotice';
 import { instance } from '@/apis';
 
+console.log(instance);
+
 // 이모티콘 파일 업로드
 export async function fetchEmojiUpload(
   username: string,
   formData: FormData,
 ): Promise<void> {
-  const { data, status } = await instance({
+  const { data, status } = await instance.store({
     method: 'post',
-    url: `store/${username}/emoji/upload`,
+    url: `${username}/emoji/upload`,
     data: formData,
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -24,8 +26,8 @@ export async function fetchEmojiUpload(
 export async function fetchProposalsInfo(
   username: string,
 ): Promise<Proposal[]> {
-  const { data } = await instance.get(
-    `store/${username}/emoji/products/confirm`,
+  const { data } = await instance.store.get(
+    `${username}/emoji/products/confirm`,
   );
   return data;
 }
@@ -35,8 +37,8 @@ export async function fetchProposalInfo(
   username: string,
   id: number,
 ): Promise<Proposal> {
-  const { data } = await instance.get(
-    `store/${username}/emoji/products/${id}/confirm`,
+  const { data } = await instance.store.get(
+    `${username}/emoji/products/${id}/confirm`,
   );
 
   return data;
@@ -46,7 +48,7 @@ export async function fetchProposalInfo(
 export async function fetchStudioNoticesInfo(
   username: string,
 ): Promise<StudioNotice[]> {
-  const { data } = await instance.get(`store/${username}/studio/notices`);
+  const { data } = await instance.store.get(`${username}/studio/notices`);
 
   return data;
 }
@@ -56,7 +58,7 @@ export async function fetchStudioNoticeInfo(
   username: string,
   id: number,
 ): Promise<any> {
-  const { data } = await instance.get(`store/${username}/studio/notices/${id}`);
+  const { data } = await instance.store.get(`${username}/studio/notices/${id}`);
 
   return data;
 }

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { reactive, ref } from '@vue/composition-api';
+import { fetchLogin } from '@/apis/user';
 
 export const useStore = defineStore('main', () => {
   const boxState = reactive({
@@ -22,9 +23,15 @@ export const useStore = defineStore('main', () => {
     boxState.confirm = confirm;
   }
 
+  async function login(username: string, password: string) {
+    const data = await fetchLogin(username, password);
+    localStorage.setItem('token', JSON.stringify(data));
+  }
+
   return {
     isLoading,
     boxState,
     setBoxState,
+    login,
   };
 });

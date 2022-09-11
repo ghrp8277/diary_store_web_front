@@ -221,13 +221,15 @@ export default defineComponent({
       return false;
     }
 
-    const submit = async (e: any) => {
+    const submit = async (e: Event) => {
+      const target = e.target as HTMLFormElement;
+
       const form_data = {
-        product_name: e.target.product_name.value,
-        author_name: e.target.author_name.value,
-        category: e.target.category.value,
-        tag: e.target.tag.value,
-        comment: e.target.comment.value,
+        product_name: target.product_name.value,
+        author_name: target.author_name.value,
+        category: target.category.value,
+        tag: target.tag.value,
+        comment: target.comment.value,
       };
 
       if (
