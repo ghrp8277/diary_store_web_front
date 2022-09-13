@@ -30,23 +30,23 @@
 
       <dl>
         <dt>이모티콘 상품명</dt>
-        <dd>{{ proposal.product_name }}</dd>
+        <dd>{{ product_name }}</dd>
       </dl>
 
       <dl>
         <dt>이모티콘 카테고리</dt>
-        <dd>{{ proposal.category }}</dd>
+        <dd>{{ category }}</dd>
       </dl>
 
       <dl>
         <dt>이모티콘 태그</dt>
-        <dd>{{ proposal.tag }}</dd>
+        <dd>{{ tag }}</dd>
       </dl>
 
       <dl>
         <dt>이모티콘 설명</dt>
         <dd>
-          {{ proposal.comment }}
+          {{ comment }}
         </dd>
       </dl>
     </div>
@@ -54,14 +54,9 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  onMounted,
-  computed,
-  toRefs,
-} from '@vue/composition-api';
-import { useStore } from '@/stores/store';
-import { storeToRefs } from 'pinia';
+import { defineComponent, onMounted, toRefs } from '@vue/composition-api';
+import proposal from '@/composables/proposal';
+import moment from 'moment';
 
 export default defineComponent({
   name: 'ProposalView',
@@ -72,22 +67,25 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const store = useStore();
-    const { proposalInfo, confirmMatched, createAtToMoment } =
-      storeToRefs(store);
     const { id } = toRefs(props);
 
-    const proposal = computed(() => proposalInfo.value);
+    const {
+      is_confirm,
+      product_name,
+      category,
+      tag,
+      comment,
+      createdAt,
+      confirmMatched,
+    } = proposal(id.value);
 
-    onMounted(async () => {
-      await store.FETCH_PROPOSAL_INFO('test', id.value);
-
+    onMounted(() => {
       const progressbarTag = document.getElementsByClassName('progressbar')[0];
 
       for (let [index, node] of progressbarTag.childNodes.entries()) {
-        const is_confirm = Number(proposal.value.is_confirm);
+        const confirm = is_confirm.value as number;
 
-        if (index <= is_confirm) {
+        if (index <= confirm) {
           const tag = node as any;
 
           tag.className = 'active';
@@ -96,9 +94,12 @@ export default defineComponent({
     });
 
     return {
-      proposal,
-      confirmMatched: computed(() => confirmMatched.value),
-      createAtToMoment: computed(() => createAtToMoment.value),
+      product_name,
+      category,
+      tag,
+      comment,
+      confirmMatched: confirmMatched.value,
+      createAtToMoment: moment(createdAt.value).format('YYYY-MM-DD HH:mm:ss'),
     };
   },
 });

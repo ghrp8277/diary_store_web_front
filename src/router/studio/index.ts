@@ -13,7 +13,7 @@ const routes: Array<RouteConfig> = [
     name: 'proposals',
     component: () => import('@/views/studio/ProposalsView.vue'),
     redirect: {
-      name: 'proposals-content',
+      name: 'proposalsContent',
     },
     children: proposalsRoute,
   },
@@ -22,7 +22,7 @@ const routes: Array<RouteConfig> = [
     name: 'notices',
     component: () => import('@/views/studio/NoticesView.vue'),
     redirect: {
-      name: 'notices-content',
+      name: 'noticesContent',
     },
     children: noticesRoute,
   },

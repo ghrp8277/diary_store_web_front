@@ -24,9 +24,9 @@
       <tbody>
         <tr v-for="(proposal, index) in proposals" :key="index">
           <td>{{ proposal.id }}</td>
-          <td>{{ proposal.is_confirm }}</td>
+          <td>{{ matched(proposal.id).confirmMatched }}</td>
           <td>{{ proposal.product_name }}</td>
-          <td>{{ proposal.createdAt }}</td>
+          <td>{{ matched(proposal.id).createAtToMoment }}</td>
         </tr>
       </tbody>
     </table>
@@ -35,19 +35,32 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref } from '@vue/composition-api';
-import { useStore } from '@/stores/store';
+import stores from '@/stores';
 import router from '@/router';
 import { storeToRefs } from 'pinia';
 import { Proposal } from '@/types/proposal';
+import proposalComposalble from '@/composables/proposal';
+import moment from 'moment';
 
 export default defineComponent({
-  name: 'ProposalsTableView',
+  name: 'ProposalsContentView',
   setup() {
-    const store = useStore();
-    const { confirmTableMatched } = storeToRefs(store);
+    const { proposalsInfo } = storeToRefs(stores.store);
 
-    const proposals = computed(() => confirmTableMatched.value);
+    const proposals = computed(() => proposalsInfo.value);
     const copy_proposals = ref([...proposals.value]);
+
+    const matched = (id: number) => {
+      const { confirmMatched, createdAt } = proposalComposalble(id);
+
+      const createAtToMoment = moment(createdAt.value).format('YYYY-MM-DD');
+
+      return {
+        confirmMatched: confirmMatched.value,
+
+        createAtToMoment,
+      };
+    };
 
     const onChange = (e: Event) => {
       const target = e.target as HTMLInputElement;
@@ -56,9 +69,9 @@ export default defineComponent({
         copy_proposals.value = [...array];
       }
 
-      function matched(match_confirm: string) {
+      function matched(match_confirm: number) {
         return proposals.value.filter((proposal) => {
-          const is_confirm = proposal.is_confirm as string;
+          const is_confirm = proposal.is_confirm;
 
           if (is_confirm == match_confirm) return proposal;
         });
@@ -69,16 +82,16 @@ export default defineComponent({
           copy(proposals.value);
           break;
         case 'SUBMISSION_COMPLETE':
-          copy(matched('제출완료'));
+          copy(matched(0));
           break;
         case 'UNDER_REVIEW':
-          copy(matched('심사중'));
+          copy(matched(1));
           break;
         case 'NOT_APPROVED':
-          copy(matched('미승인'));
+          copy(matched(2));
           break;
         case 'APPROVED':
-          copy(matched('승인'));
+          copy(matched(3));
           break;
       }
     };
@@ -110,6 +123,7 @@ export default defineComponent({
 
     return {
       proposals: copy_proposals,
+      matched,
       onChange,
       onClick,
     };

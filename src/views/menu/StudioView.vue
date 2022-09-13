@@ -52,7 +52,7 @@ export default defineComponent({
       deleteCookie('til_user');
 
       router.push({
-        name: 'login',
+        name: 'home',
       });
     }
 

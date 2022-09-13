@@ -19,7 +19,7 @@
 import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
-  name: 'ProposalsNotContentView',
+  name: 'ProposalsNotContent',
   setup() {
     return {};
   },

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { reactive, ref } from '@vue/composition-api';
+import { reactive, ref, computed } from '@vue/composition-api';
 import { getAccessFromCookie, getUserFromCookie } from '@/services/cookies';
 
 export const useStore = defineStore('main', () => {
@@ -29,7 +29,7 @@ export const useStore = defineStore('main', () => {
   return {
     username,
     token,
-    isLogin: username.value.length == 0,
+    isLogin: computed(() => username.value.length != 0),
     isLoading,
     boxState,
     setBoxState,

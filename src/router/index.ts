@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import VueRouter, { NavigationGuardNext, Route, RouteConfig } from 'vue-router';
 import studioRoute from '@/router/studio';
+import { useStore } from '@/stores/main';
+import { storeToRefs } from 'pinia';
 
 Vue.use(VueRouter);
 
@@ -9,8 +11,14 @@ export function requireAuth(
   from: Route,
   next: NavigationGuardNext<Vue>,
 ) {
-  console.log(to.meta);
-  if (to.meta?.authRequired) {
+  const store = useStore();
+  const { isLogin } = storeToRefs(store);
+
+  if (
+    to.meta &&
+    to.matched.some((record) => record.meta.authRequired) &&
+    !isLogin.value
+  ) {
     next('/login');
     return;
   }

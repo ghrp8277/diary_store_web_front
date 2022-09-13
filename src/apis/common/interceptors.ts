@@ -3,12 +3,27 @@ import {
   AxiosResponse,
   AxiosInstance,
   AxiosError,
+  AxiosRequestHeaders,
 } from 'axios';
 import router from '@/router';
+import { useStore } from '@/stores/main';
+import { storeToRefs } from 'pinia';
+import { deleteCookie } from '@/services/cookies';
 
 const DEBUG = process.env.NODE_ENV === 'development';
 
 export function setInterceptors(instance: AxiosInstance) {
+  const store = useStore();
+  const { token, username, isLoading } = storeToRefs(store);
+
+  const startLoading = () => {
+    isLoading.value = true;
+  };
+
+  const endLoading = () => {
+    isLoading.value = false;
+  };
+
   instance.interceptors.request.use(
     (config: AxiosRequestConfig): AxiosRequestConfig => {
       if (DEBUG) {
@@ -18,6 +33,10 @@ export function setInterceptors(instance: AxiosInstance) {
                       [headers] [${JSON.stringify(config.headers)}]
                   `);
       }
+
+      const headers = config.headers as AxiosRequestHeaders;
+
+      headers.Authorization = token.value;
 
       return config;
     },
@@ -55,6 +74,16 @@ export function setInterceptors(instance: AxiosInstance) {
       }
 
       if (status == 500) router.push({ path: '/500' });
+      else if (status == 403) {
+        username.value = '';
+        token.value = '';
+
+        deleteCookie('til_access');
+        deleteCookie('til_refresh');
+        deleteCookie('til_user');
+
+        router.push({ name: 'main' });
+      }
 
       return Promise.reject(error.response);
     },

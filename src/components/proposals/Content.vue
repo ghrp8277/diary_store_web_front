@@ -10,7 +10,7 @@
 import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
-  name: 'ProposalsContentView',
+  name: 'ProposalsContent',
   setup() {
     return {};
   },

@@ -1,13 +1,11 @@
 <template>
-  <div v-if="notice">
+  <div>
     <div class="title-head">
       <div class="wrap-content">
-        <span v-if="notice.is_important" class="txt-tag">중요</span>
-        <strong>{{ notice.title }}</strong>
+        <span v-if="is_important" class="txt-tag">중요</span>
+        <strong>{{ title }}</strong>
       </div>
-      <span class="txt-date">{{
-        moment(notice.createdAt).format('YYYY-MM-DD')
-      }}</span>
+      <span class="txt-date">{{ createAtToMoment }}</span>
     </div>
     <div class="content" v-html="htmlBind"></div>
 
@@ -24,10 +22,10 @@ import {
   toRefs,
   computed,
 } from '@vue/composition-api';
-import { useStore } from '@/stores/store';
+import stores from '@/stores';
 import moment from 'moment';
-import { StudioNotice } from '@/types/studioNotice';
 import { storeToRefs } from 'pinia';
+import noticesComposable from '@/composables/notices';
 
 export default defineComponent({
   name: 'NoticeView',
@@ -38,18 +36,26 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const store = useStore();
     const { id } = toRefs(props);
-    const { noticeInfo } = storeToRefs(store);
+    const { html } = storeToRefs(stores.store);
+
+    const { isLoading } = storeToRefs(stores.main);
+
+    const { is_important, createdAt, title } = noticesComposable(id.value);
 
     onMounted(async () => {
-      await store.FETCH_STUDIO_NOTICE_INFO('test', id.value);
+      isLoading.value = true;
+
+      await stores.store.FETCH_STUDIO_NOTICE_INFO(id.value);
+
+      isLoading.value = false;
     });
 
     return {
-      htmlBind: computed(() => noticeInfo.value.html),
-      notice: computed(() => noticeInfo.value.notice as StudioNotice),
-      moment,
+      htmlBind: computed(() => html.value),
+      is_important,
+      title,
+      createAtToMoment: moment(createdAt.value).format('YYYY-MM-DD'),
     };
   },
 });

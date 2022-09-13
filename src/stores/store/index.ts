@@ -1,6 +1,5 @@
 import {
   fetchProposalsInfo,
-  fetchProposalInfo,
   fetchStudioNoticesInfo,
   fetchStudioNoticeInfo,
 } from '@/apis/store';
@@ -16,20 +15,15 @@ export const useStore = defineStore('store', {
 
       this.proposalsInfo = data;
     },
-    async FETCH_PROPOSAL_INFO(username: string, id: number) {
-      const data = await fetchProposalInfo(username, id);
-
-      this.proposalInfo = data;
-    },
-    async FETCH_STUDIO_NOTICES_INFO(username: string) {
-      const data = await fetchStudioNoticesInfo(username);
+    async FETCH_STUDIO_NOTICES_INFO() {
+      const data = await fetchStudioNoticesInfo();
 
       this.noticesInfo = data;
     },
-    async FETCH_STUDIO_NOTICE_INFO(username: string, id: number) {
-      const data = await fetchStudioNoticeInfo(username, id);
+    async FETCH_STUDIO_NOTICE_INFO(id: number) {
+      const data = await fetchStudioNoticeInfo(id);
 
-      this.noticeInfo = data;
+      this.html = data;
     },
   },
   getters,

@@ -27,36 +27,20 @@ export async function fetchProposalsInfo(
   const { data } = await instance.store.get(
     `${username}/emoji/products/confirm`,
   );
-  return data;
-}
-
-// 타겟 승인 정보를 가져온다.
-export async function fetchProposalInfo(
-  username: string,
-  id: number,
-): Promise<Proposal> {
-  const { data } = await instance.store.get(
-    `${username}/emoji/products/${id}/confirm`,
-  );
 
   return data;
 }
 
 // 공지사항 전체 정보를 가져온다.
-export async function fetchStudioNoticesInfo(
-  username: string,
-): Promise<StudioNotice[]> {
-  const { data } = await instance.store.get(`${username}/studio/notices`);
+export async function fetchStudioNoticesInfo(): Promise<StudioNotice[]> {
+  const { data } = await instance.store.get(`studio/notices`);
 
   return data;
 }
 
 // 특정 공지사항 내용을 가져온다.
-export async function fetchStudioNoticeInfo(
-  username: string,
-  id: number,
-): Promise<any> {
-  const { data } = await instance.store.get(`${username}/studio/notices/${id}`);
+export async function fetchStudioNoticeInfo(id: number): Promise<string> {
+  const { data } = await instance.store.get(`studio/notices/${id}`);
 
   return data;
 }

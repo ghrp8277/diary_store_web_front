@@ -6,10 +6,10 @@ import { StudioNotice } from '@/types/studioNotice';
  */
 const state = {
   proposalsInfo: [] as Proposal[],
-  proposalInfo: {} as Proposal,
 
   noticesInfo: [] as StudioNotice[],
-  noticeInfo: {} as any,
+
+  html: '',
 };
 
 type State = typeof state;

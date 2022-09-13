@@ -9,7 +9,7 @@
         <tr
           v-for="(notice, index) in notices"
           :key="index"
-          @click="onClick($event, notice)"
+          @click="onClick($event, notice.id)"
         >
           <td scope="col" class="txt-title">
             <span v-if="notice.is_important" class="txt-tag">중요</span>
@@ -38,20 +38,11 @@ export default defineComponent({
 
     const { noticesInfo } = storeToRefs(store);
 
-    function onClick(
-      e: Event,
-      notice: {
-        id: number;
-        is_important: boolean;
-        title: string;
-        createdAt: string;
-        file_name: string;
-      },
-    ) {
+    function onClick(e: Event, id: number) {
       router.push({
         name: 'notice',
         params: {
-          id: String(notice.id),
+          id: String(id),
         },
       });
     }

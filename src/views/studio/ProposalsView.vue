@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <router-view :name="name" />
+  <div v-if="dynamicComponent">
+    <component :is="dynamicComponent" />
   </div>
 </template>
 
@@ -8,29 +8,41 @@
 import {
   computed,
   defineComponent,
+  defineAsyncComponent,
   onMounted,
-  ref,
 } from '@vue/composition-api';
-import { useStore } from '@/stores/store';
+import stores from '@/stores';
 import { storeToRefs } from 'pinia';
 
 export default defineComponent({
   name: 'ProposalsView',
   setup() {
-    const store = useStore();
-    const { proposalsInfo } = storeToRefs(store);
-    const name = ref('');
+    const { proposalsInfo } = storeToRefs(stores.store);
+    const { isLoading } = storeToRefs(stores.main);
+
+    const dynamicComponent = computed(() => {
+      let name = '';
+
+      if (proposalsInfo.value.length > 0) name = 'Content.vue';
+      else name = 'NotContent.vue';
+
+      return defineAsyncComponent({
+        loader: () => import(`@/components/proposals/${name}`),
+        delay: 300,
+        timeout: 3000,
+      });
+    });
 
     onMounted(async () => {
-      await store.FETCH_PROPOSALS_INFO('test');
+      isLoading.value = true;
 
-      if (proposalsInfo.value.length > 0) {
-        name.value = 'exist';
-      } else name.value = 'not';
+      await stores.store.FETCH_PROPOSALS_INFO('test');
+
+      isLoading.value = false;
     });
 
     return {
-      name: computed(() => name.value),
+      dynamicComponent,
     };
   },
 });

@@ -7,6 +7,7 @@ import VueCompositionAPI from '@vue/composition-api';
 import { createPinia, PiniaVuePlugin } from 'pinia';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
+import { useStore } from './stores/main';
 
 Vue.config.productionTip = false;
 
@@ -18,6 +19,8 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
+
+useStore(pinia);
 
 new Vue({
   router,

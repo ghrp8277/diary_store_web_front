@@ -1,33 +1,47 @@
 <template>
-  <div class="notices">
-    <router-view :name="name" />
+  <div class="notices" v-if="dynamicComponent">
+    <component :is="dynamicComponent" />
   </div>
 </template>
 
 <script lang="ts">
 import {
   defineComponent,
+  defineAsyncComponent,
   onMounted,
-  ref,
   computed,
 } from '@vue/composition-api';
-import { useStore } from '@/stores/store';
+import stores from '@/stores';
+import { storeToRefs } from 'pinia';
 
 export default defineComponent({
   name: 'NoticesView',
   setup() {
-    const store = useStore();
-    const name = ref('');
+    const { isLoading } = storeToRefs(stores.main);
+    const { noticesInfo } = storeToRefs(stores.store);
 
-    onMounted(async () => {
-      await store.FETCH_STUDIO_NOTICES_INFO('test');
+    const dynamicComponent = computed(() => {
+      let name = '';
 
-      if (store.noticesInfo.length > 0) {
-        name.value = 'exist';
-      } else name.value = 'not';
+      if (noticesInfo.value.length > 0) name = 'Content.vue';
+      else name = 'NotContent.vue';
+
+      return defineAsyncComponent({
+        loader: () => import(`@/components/notices/${name}`),
+        delay: 300,
+        timeout: 3000,
+      });
     });
 
-    return { name: computed(() => name.value) };
+    onMounted(async () => {
+      isLoading.value = true;
+
+      await stores.store.FETCH_STUDIO_NOTICES_INFO();
+
+      isLoading.value = false;
+    });
+
+    return { dynamicComponent };
   },
 });
 </script>
