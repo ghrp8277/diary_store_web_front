@@ -18,7 +18,6 @@ export default defineComponent({
   name: 'ProposalsView',
   setup() {
     const { proposalsInfo } = storeToRefs(stores.store);
-    const { isLoading } = storeToRefs(stores.main);
 
     const dynamicComponent = computed(() => {
       let name = '';
@@ -34,11 +33,7 @@ export default defineComponent({
     });
 
     onMounted(async () => {
-      isLoading.value = true;
-
       await stores.store.FETCH_PROPOSALS_INFO('test');
-
-      isLoading.value = false;
     });
 
     return {

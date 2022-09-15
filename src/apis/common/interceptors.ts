@@ -8,13 +8,13 @@ import {
 import router from '@/router';
 import { useStore } from '@/stores/main';
 import { storeToRefs } from 'pinia';
-import { deleteCookie } from '@/services/cookies';
+import { initUser } from '@/services/auth';
 
 const DEBUG = process.env.NODE_ENV === 'development';
 
 export function setInterceptors(instance: AxiosInstance) {
   const store = useStore();
-  const { token, username, isLoading } = storeToRefs(store);
+  const { token, isLoading } = storeToRefs(store);
 
   const startLoading = () => {
     isLoading.value = true;
@@ -38,12 +38,16 @@ export function setInterceptors(instance: AxiosInstance) {
 
       headers.Authorization = token.value;
 
+      startLoading();
+
       return config;
     },
     (error: AxiosError): Promise<AxiosError> => {
       if (DEBUG) {
         console.error(`[request error] [${JSON.stringify(error)}]`);
       }
+
+      endLoading();
 
       return Promise.reject(error.response);
     },
@@ -60,6 +64,8 @@ export function setInterceptors(instance: AxiosInstance) {
                   `);
       }
 
+      endLoading();
+
       return response;
     },
     (error: AxiosError): Promise<AxiosError> => {
@@ -75,15 +81,12 @@ export function setInterceptors(instance: AxiosInstance) {
 
       if (status == 500) router.push({ path: '/500' });
       else if (status == 403) {
-        username.value = '';
-        token.value = '';
-
-        deleteCookie('til_access');
-        deleteCookie('til_refresh');
-        deleteCookie('til_user');
+        initUser();
 
         router.push({ name: 'main' });
       }
+
+      endLoading();
 
       return Promise.reject(error.response);
     },

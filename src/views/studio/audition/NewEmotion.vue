@@ -119,6 +119,10 @@
 
       <button class="btn-submit">제출하기</button>
     </form>
+
+    <message-box v-if="isShow">
+      <message-content slot="content" :message="message" />
+    </message-box>
   </div>
 </template>
 
@@ -129,13 +133,21 @@ import {
   reactive,
   ref,
 } from '@vue/composition-api';
-import { useStore } from '@/stores/main';
+import stores from '@/stores';
 import { fetchEmojiUpload } from '@/apis/store';
+import MessageBox from '@/components/MessageBox.vue';
+import MessageContent from '@/components/message/MessageContent.vue';
+import { storeToRefs } from 'pinia';
 
 export default defineComponent({
   name: 'NewEmotionView',
+  components: {
+    MessageBox,
+    MessageContent,
+  },
   setup() {
-    const store = useStore();
+    const { isShow } = storeToRefs(stores.main);
+    const message = ref('');
     const files = reactive<{ src: string; file: any }[]>([]);
     const commentCnt = ref(0);
     const isTagDisabled = ref(true);
@@ -177,7 +189,9 @@ export default defineComponent({
               files[index].file = file;
             } else {
               target.value = '';
-              store.setBoxState(true, '이미지 사이즈를 확인해주세요.');
+
+              isShow.value = true;
+              message.value = '이미지 사이즈를 확인해주세요.';
             }
           });
         }
@@ -195,10 +209,8 @@ export default defineComponent({
 
         // 파일 크기 체크
         if (1024 * 150 < file.size) {
-          store.setBoxState(
-            true,
-            `${file.name} 이미지 크기가 너무 큽니다. 최대 이미지 크기는 150kb 입니다.`,
-          );
+          isShow.value = true;
+          message.value = `${file.name} 이미지 크기가 너무 큽니다. 최대 이미지 크기는 150kb 입니다.`;
           // file reset
           target.value = '';
         } else {
@@ -274,6 +286,7 @@ export default defineComponent({
     });
 
     return {
+      isShow,
       commentCnt,
       typing: (e: Event) => {
         const maxCnt = 200;

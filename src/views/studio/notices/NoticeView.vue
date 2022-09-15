@@ -39,16 +39,10 @@ export default defineComponent({
     const { id } = toRefs(props);
     const { html } = storeToRefs(stores.store);
 
-    const { isLoading } = storeToRefs(stores.main);
-
     const { is_important, createdAt, title } = noticesComposable(id.value);
 
     onMounted(async () => {
-      isLoading.value = true;
-
       await stores.store.FETCH_STUDIO_NOTICE_INFO(id.value);
-
-      isLoading.value = false;
     });
 
     return {

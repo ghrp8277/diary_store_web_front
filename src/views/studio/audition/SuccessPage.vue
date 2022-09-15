@@ -30,34 +30,71 @@
       </thead>
       <tbody>
         <tr>
-          <!-- <td>{{ is_confirm }}</td> -->
-          <td>{{ query.product_name }}</td>
-          <td>{{ query.category }}</td>
-          <td>{{ query.tag }}</td>
+          <td>{{ confirmMatched }}</td>
+          <td>{{ product_name }}</td>
+          <td>{{ category }}</td>
+          <td>{{ tag }}</td>
         </tr>
       </tbody>
     </table>
-
-    <button class="submit" @click="router.push({ name: 'proposals' })">
-      제안 관리
-    </button>
+    <router-link :to="{ name: 'proposals' }" tag="button" class="submit">
+      <span>제안 관리</span>
+    </router-link>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
-// import { IsConfirm2 } from '@/types/proposals';
-import router from '@/router';
+import { IsConfirm } from '@/types/emojiConfirm';
+import { defineComponent, toRefs } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'SuccessPageView',
-  setup() {
-    const query = router.currentRoute.query;
+  props: {
+    product_name: {
+      type: String,
+      required: true,
+    },
+    category: {
+      type: String,
+      required: true,
+    },
+    tag: {
+      type: String,
+      required: true,
+    },
+    is_confirm: {
+      type: Number,
+      required: true,
+    },
+  },
+  setup(props) {
+    const { is_confirm } = toRefs(props);
+
+    function confirmMatched() {
+      const index = IsConfirm[is_confirm.value];
+
+      let result = '';
+
+      switch (index) {
+        case 'SUBMISSION_COMPLETE':
+          result = '제출완료';
+          break;
+        case 'UNDER_REVIEW':
+          result = '심사중';
+          break;
+        case 'NOT_APPROVED':
+          result = '미승인';
+          break;
+        case 'APPROVED':
+          result = '승인';
+          break;
+      }
+
+      return result;
+    }
 
     return {
-      query,
-      router,
-      // is_confirm: IsConfirm2[Number(query.is_confirm)],
+      confirmMatched: confirmMatched(),
     };
   },
 });
@@ -207,14 +244,6 @@ export default defineComponent({
   color: #000;
 
   border-bottom: 1px solid #000;
-}
-
-.success-content > table > tbody > tr {
-  cursor: pointer;
-}
-
-.success-content > table > tbody > tr:hover {
-  background-color: rgba(#666, 0.1);
 }
 
 .success-content > table > tbody > tr > td {

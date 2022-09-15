@@ -17,7 +17,6 @@ import { storeToRefs } from 'pinia';
 export default defineComponent({
   name: 'NoticesView',
   setup() {
-    const { isLoading } = storeToRefs(stores.main);
     const { noticesInfo } = storeToRefs(stores.store);
 
     const dynamicComponent = computed(() => {
@@ -34,11 +33,7 @@ export default defineComponent({
     });
 
     onMounted(async () => {
-      isLoading.value = true;
-
       await stores.store.FETCH_STUDIO_NOTICES_INFO();
-
-      isLoading.value = false;
     });
 
     return { dynamicComponent };

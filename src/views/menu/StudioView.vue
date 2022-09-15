@@ -5,7 +5,9 @@
       <div class="user-info">
         <img class="user-img" src="@/assets/logo.png" />
         <h4 class="user-id">{{ username }}</h4>
-        <button class="logout" @click="logout">로그아웃</button>
+        <button class="logout" @click="isShow = true">
+          <span>로그아웃</span>
+        </button>
       </div>
       <!-- 메뉴 버튼들 -->
       <div class="menus">
@@ -27,38 +29,32 @@
     <div class="container">
       <router-view />
     </div>
+
+    <message-box v-if="isShow">
+      <logout-content slot="content" />
+    </message-box>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
-import router from '@/router';
-import { useStore } from '@/stores/main';
-import { deleteCookie } from '@/services/cookies';
+import stores from '@/stores';
 import { storeToRefs } from 'pinia';
+import MessageBox from '@/components/MessageBox.vue';
+import LogoutContent from '@/components/message/LogoutContent.vue';
 
 export default defineComponent({
   name: 'StudioView',
+  components: {
+    MessageBox,
+    LogoutContent,
+  },
   setup() {
-    const store = useStore();
-    const { username, token } = storeToRefs(store);
-
-    function logout() {
-      username.value = '';
-      token.value = '';
-
-      deleteCookie('til_access');
-      deleteCookie('til_refresh');
-      deleteCookie('til_user');
-
-      router.push({
-        name: 'home',
-      });
-    }
+    const { username, isShow } = storeToRefs(stores.main);
 
     return {
+      isShow,
       username,
-      logout,
     };
   },
 });

@@ -7,38 +7,32 @@
             <span><b>Diary Studio</b></span>
           </h2>
           <div class="form-item">
-            <label for="username">아이디</label>
             <input
               type="text"
               id="username"
               name="username"
               autocomplete="off"
+              placeholder="아이디"
             />
           </div>
           <div class="form-item">
-            <label for="password">비밀번호</label>
             <input
               type="password"
               id="password"
               name="password"
               autocomplete="off"
+              placeholder="비밀번호"
             />
           </div>
-          <button type="submit" id="connect" class="btn-connect">
-            <span>로그인</span>
-          </button>
-        </form>
-        <div class="login-message">{{ message }}</div>
 
-        <div class="set_login">
-          <div class="item_inp item_check">
-            <input
-              type="checkbox"
-              id="staySignedIn"
-              name="stay_signed_in"
-              value="true"
-              class="inp_g inp_check"
-            />
+          <div class="login-message">
+            <transition name="slide-fade">
+              <span>{{ message }}</span>
+            </transition>
+          </div>
+
+          <div class="item-check">
+            <input type="checkbox" class="inp_g" />
 
             <label class="lab_g" for="staySignedIn">
               <span style="outline: none" class="login-check"
@@ -46,7 +40,17 @@
               >
             </label>
           </div>
-        </div>
+
+          <button type="submit" id="connect" class="btn-signin">
+            <span>로그인</span>
+          </button>
+        </form>
+
+        <hr class="line" />
+
+        <button class="btn-signup">
+          <span>회원가입</span>
+        </button>
       </div>
       <div class="login-img"></div>
     </div>
@@ -54,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@vue/composition-api';
+import { defineComponent, onMounted, ref } from '@vue/composition-api';
 import { fetchLogin } from '@/apis/user';
 import router from '@/router';
 import {
@@ -99,7 +103,7 @@ export default defineComponent({
 
           // 메인으로 이동
           router.push({
-            name: 'main',
+            name: 'studio',
           });
         } catch (error: any) {
           if (error.status == 401) {
@@ -111,6 +115,7 @@ export default defineComponent({
         }
       }
     }
+
     return { onSubmit, message };
   },
 });
@@ -120,33 +125,61 @@ export default defineComponent({
 .login-container {
   background-color: #717274;
   height: 100%;
+  min-height: 700px;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
 }
 
 .login-card {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 999;
   text-align: center;
-  width: 800px;
+
   height: 500px;
-  transform: translate(-50%, -50%);
+  width: 80vw;
+  max-width: 1000px;
+
   background: #e4e4e4;
   border: 1px solid rgba(0, 0, 0, 0.75);
   border-radius: 5px;
   box-shadow: -1px 4px 28px 0px rgba(0, 0, 0, 0.75);
 
   display: flex;
+
+  justify-content: center;
+  align-items: center;
   flex-direction: row;
   flex-wrap: nowrap;
 }
 
 .login-form {
-  flex-grow: 1;
+  flex: 1;
+}
+
+@media screen and (max-width: 800px) {
+  .login-img {
+    display: none;
+  }
+
+  .login-card {
+    width: 500px;
+    height: 600px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .login-card {
+    width: 100%;
+    height: 100%;
+
+    border-radius: 0;
+    border: none;
+  }
 }
 
 .login-img {
-  flex-grow: 1;
+  flex: 1;
 
   background: url('@/assets/logo2.png') no-repeat;
 
@@ -160,14 +193,14 @@ export default defineComponent({
 .login-form > form {
   position: relative;
 
-  margin: 50px 20px 30px;
+  margin: 0 20px;
 }
 
 form > .form-title {
   display: block;
   width: 100%;
 
-  text-align: center;
+  text-align: left;
 }
 
 .form-item {
@@ -175,57 +208,65 @@ form > .form-title {
   margin-bottom: 10px;
 }
 
-.form-item > label {
-  text-align: left;
-  width: 70px;
-  height: 35px;
-  font-family: 'Avenir';
-  font-style: normal;
-  font-weight: bold;
-  font-size: 13px;
-  line-height: 38px;
-}
-
 .form-item > input {
-  width: calc(100% - 200px);
+  width: 100%;
   height: 35px;
-  font-family: 'Avenir';
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
   line-height: 22px;
   outline: none;
-  border-radius: 15px;
+  border-radius: 5px;
 
   background-color: rgb(233, 233, 233);
 
   padding-left: 15px;
+
+  border-width: 1px;
 }
 
 input:focus {
   outline: none;
 }
 
-button {
-  position: absolute;
-  top: 47px;
-  right: 0;
-
-  font-size: 13px;
-  padding: 20px;
-  height: 90px;
-  width: 100px;
+.btn-signin {
   background: #717274;
 
   color: white;
+}
+
+.btn-signin:hover {
+  background-color: rgba(#717274, 0.9);
+}
+
+.btn-signup {
+  background: #fff;
+
+  color: black;
+
+  margin: 0 20px;
+
+  box-sizing: border-box;
+
+  width: calc(100% - 40px);
+}
+
+.btn-signup:hover {
+  background-color: rgba(#fff, 0.9);
+}
+
+button {
+  font-size: 15px;
+  font-weight: bold;
+  height: 45px;
+  width: 100%;
+
+  border-radius: 5px;
+
   border: 0;
   cursor: pointer;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   transition: all 0.5s;
-}
-
-button:hover {
-  background-color: rgba(#717274, 0.9);
 }
 
 .login-message {
@@ -233,19 +274,15 @@ button:hover {
 
   text-align: center;
 
-  font-size: 11px;
+  font-size: 13px;
 
-  display: inline-block;
+  margin: 10px;
 }
 
-.set_login {
-  margin-top: 25px;
-}
-
-.set_login .item_check {
-  // float: left;
+.item-check {
   text-align: left;
-  padding-left: 15px;
+
+  margin-bottom: 10px;
 }
 
 .inp_g {
@@ -258,7 +295,7 @@ button:hover {
   border: 0;
   outline: 0;
   flex-grow: 0;
-  border-radius: 50%;
+  border-radius: 5px;
   background-color: #ffffff;
   transition: background 300ms;
   cursor: pointer;
@@ -293,5 +330,29 @@ button:hover {
   padding-left: 3px;
 
   font-weight: bold;
+}
+
+.line {
+  width: calc(100% - 40px);
+
+  height: 1px;
+
+  margin: 20px;
+
+  background: #717274;
+}
+
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
 }
 </style>

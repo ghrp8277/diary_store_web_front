@@ -35,7 +35,12 @@ const routes: Array<RouteConfig> = [
     path: 'audition/success',
     name: 'success',
     component: () => import('@/views/studio/audition/SuccessPage.vue'),
-    props: true,
+    props: (route) => ({
+      product_name: route.query.product_name,
+      category: route.query.category,
+      tag: route.query.tag,
+      is_confirm: route.query.is_confirm,
+    }),
   },
 ];
 

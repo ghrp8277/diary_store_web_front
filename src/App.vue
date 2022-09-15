@@ -2,7 +2,7 @@
   <div id="app">
     <router-view :class="{ loading: isLoading, 'box-show': isShow }" />
     <div :class="{ 'layer-dimmed': isShow }"></div>
-    <message-box v-if="isShow" />
+
     <loading v-if="isLoading" />
   </div>
 </template>
@@ -10,7 +10,6 @@
 <script lang="ts">
 import { defineComponent, computed } from '@vue/composition-api';
 import Loading from '@/components/Loading.vue';
-import MessageBox from '@/components/MessageBox.vue';
 import { useStore } from '@/stores/main';
 import { storeToRefs } from 'pinia';
 
@@ -18,16 +17,15 @@ export default defineComponent({
   name: 'App',
   components: {
     Loading,
-    MessageBox,
   },
   setup() {
     const store = useStore();
 
-    const { isLoading, boxState } = storeToRefs(store);
+    const { isLoading, isShow } = storeToRefs(store);
 
     return {
       store,
-      isShow: computed(() => boxState.value.isShow),
+      isShow,
       isLoading: computed(() => isLoading.value),
     };
   },
