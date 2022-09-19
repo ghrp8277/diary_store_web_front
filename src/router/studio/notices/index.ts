@@ -2,7 +2,7 @@ import { RouteConfig } from 'vue-router';
 
 const routes: Array<RouteConfig> = [
   {
-    path: '',
+    path: 'list',
     name: 'noticesContent',
     component: () => import('@/views/studio/notices/NoticesContentView.vue'),
   },

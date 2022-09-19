@@ -30,6 +30,25 @@
         </tr>
       </tbody>
     </table>
+
+    <div class="wrap-paging">
+      <span class="link-paging" @click="onArrowPage" title="left"
+        ><font-awesome-icon class="icon" icon="fa-chevron-left"
+      /></span>
+      <!-- 넘버링 페이지 -->
+      <span
+        class="link-paging"
+        :class="{ 'click-page': page === index }"
+        @click="onChangePage($event, index)"
+        v-for="index in totalPage"
+        :key="index"
+      >
+        {{ index }}
+      </span>
+      <span class="link-paging" @click="onArrowPage" title="right"
+        ><font-awesome-icon class="icon" icon="fa-chevron-right"
+      /></span>
+    </div>
   </div>
 </template>
 
@@ -45,7 +64,7 @@ import moment from 'moment';
 export default defineComponent({
   name: 'ProposalsContentView',
   setup() {
-    const { proposalsInfo } = storeToRefs(stores.store);
+    const { proposalsInfo, proposalPage } = storeToRefs(stores.store);
 
     const proposals = computed(() => proposalsInfo.value);
     const copy_proposals = ref([...proposals.value]);
@@ -121,11 +140,41 @@ export default defineComponent({
       tdClick(td);
     };
 
+    function onArrowPage({ currentTarget }: Event) {
+      const target = currentTarget as HTMLElement;
+      const { nodeName } = target;
+
+      if (nodeName == 'SPAN') {
+        const title = target.title;
+
+        switch (title) {
+          case 'left':
+            if (proposalPage.value.page > 1) {
+              proposalPage.value.page = proposalPage.value.page - 1;
+            }
+            break;
+          case 'right':
+            if (proposalPage.value.page < proposalPage.value.totalPage) {
+              proposalPage.value.page = proposalPage.value.page + 1;
+            }
+            break;
+        }
+      }
+    }
+
+    function onChangePage(e: Event, index: number) {
+      proposalPage.value.page = index;
+    }
+
     return {
       proposals: copy_proposals,
       matched,
       onChange,
       onClick,
+      onChangePage,
+      totalPage: proposalPage.value.totalPage,
+      page: proposalPage.value.page,
+      onArrowPage,
     };
   },
 });
@@ -151,6 +200,11 @@ export default defineComponent({
 
   direction: rtl;
 }
+
+.table-view {
+  height: 100%;
+}
+
 .table-view > table {
   width: 100%;
   margin-top: 50px;
@@ -194,5 +248,36 @@ export default defineComponent({
   padding: 10px;
 
   color: #000;
+}
+
+.wrap-paging {
+  overflow: hidden;
+
+  text-align: center;
+
+  margin-top: 30px;
+}
+
+.link-paging {
+  display: inline-block;
+
+  width: 38px;
+  height: 18px;
+  margin: 0 2px;
+
+  padding: 9px 0;
+
+  cursor: pointer;
+
+  border: 1px solid #e0e0e0;
+}
+
+.link-paging > svg {
+  font-size: 15px;
+}
+
+.click-page {
+  border: 1px solid #f79700;
+  color: #f79700;
 }
 </style>

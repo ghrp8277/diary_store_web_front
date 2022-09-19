@@ -74,7 +74,7 @@ export default defineComponent({
     const store = useStore();
     const message = ref('');
 
-    const { username, token, isLoading } = storeToRefs(store);
+    const { username, token, refreshToken, isLoading } = storeToRefs(store);
 
     async function onSubmit(e: Event) {
       const target = e.target as HTMLFormElement;
@@ -95,6 +95,7 @@ export default defineComponent({
           // pinia에 저장
           username.value = name;
           token.value = data.accessToken;
+          refreshToken.value = data.refreshToken;
 
           // 쿠키에 토큰 및 유저명 저장
           saveAccessTokenToCookie(data.accessToken);

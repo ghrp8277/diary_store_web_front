@@ -120,8 +120,12 @@
       <button class="btn-submit">제출하기</button>
     </form>
 
-    <message-box v-if="isShow">
-      <message-content slot="content" :message="message" />
+    <message-box v-if="isShow" @closeBox="closeBox">
+      <message-box-content
+        slot="content"
+        :message="message"
+        @closeBox="closeBox"
+      />
     </message-box>
   </div>
 </template>
@@ -133,20 +137,18 @@ import {
   reactive,
   ref,
 } from '@vue/composition-api';
-import stores from '@/stores';
 import { fetchEmojiUpload } from '@/apis/store';
 import MessageBox from '@/components/MessageBox.vue';
-import MessageContent from '@/components/message/MessageContent.vue';
-import { storeToRefs } from 'pinia';
+import MessageBoxContent from '@/components/message/MessageContent.vue';
 
 export default defineComponent({
   name: 'NewEmotionView',
   components: {
     MessageBox,
-    MessageContent,
+    MessageBoxContent,
   },
   setup() {
-    const { isShow } = storeToRefs(stores.main);
+    const isShow = ref(false);
     const message = ref('');
     const files = reactive<{ src: string; file: any }[]>([]);
     const commentCnt = ref(0);
@@ -271,6 +273,10 @@ export default defineComponent({
       }
     };
 
+    function closeBox(isClose: boolean) {
+      isShow.value = isClose;
+    }
+
     const init = () => {
       //  files 데이터 초기화
       for (let i = 0; i < 18; i++) {
@@ -307,6 +313,8 @@ export default defineComponent({
       files,
       uploadImage,
       submit,
+      message,
+      closeBox,
     };
   },
 });

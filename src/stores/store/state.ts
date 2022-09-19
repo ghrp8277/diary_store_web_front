@@ -7,9 +7,17 @@ import { StudioNotice } from '@/types/studioNotice';
 const state = {
   proposalsInfo: [] as Proposal[],
 
+  proposalPage: {
+    totalPage: 1,
+    page: 1,
+  },
+
   noticesInfo: [] as StudioNotice[],
 
-  html: '',
+  noticePage: {
+    totalPage: 1,
+    page: 1,
+  },
 };
 
 type State = typeof state;

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <router-view :class="{ loading: isLoading, 'box-show': isShow }" />
-    <div :class="{ 'layer-dimmed': isShow }"></div>
+    <router-view :class="{ loading: isLoading, 'box-show': isBoxShow }" />
+    <div :class="{ 'layer-dimmed': isBoxShow }"></div>
 
     <loading v-if="isLoading" />
   </div>
@@ -21,12 +21,12 @@ export default defineComponent({
   setup() {
     const store = useStore();
 
-    const { isLoading, isShow } = storeToRefs(store);
+    const { isLoading, isBoxShow } = storeToRefs(store);
 
     return {
       store,
-      isShow,
       isLoading: computed(() => isLoading.value),
+      isBoxShow: computed(() => isBoxShow.value),
     };
   },
 });
@@ -70,6 +70,8 @@ body {
   bottom: 0;
   background: rgba(0, 0, 0, 0.33);
   z-index: 1000;
+
+  transition: all 0.2s;
 }
 
 .box-show {

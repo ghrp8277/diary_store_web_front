@@ -1,4 +1,4 @@
-import {
+import axios, {
   AxiosRequestConfig,
   AxiosResponse,
   AxiosInstance,
@@ -8,7 +8,7 @@ import {
 import router from '@/router';
 import { useStore } from '@/stores/main';
 import { storeToRefs } from 'pinia';
-import { initUser } from '@/services/auth';
+import { logout, refreshTokenVerify } from '@/services/auth';
 
 const DEBUG = process.env.NODE_ENV === 'development';
 
@@ -36,7 +36,7 @@ export function setInterceptors(instance: AxiosInstance) {
 
       const headers = config.headers as AxiosRequestHeaders;
 
-      headers.Authorization = token.value;
+      headers.Authorization = `Bearer ${token.value}`;
 
       startLoading();
 
@@ -68,7 +68,7 @@ export function setInterceptors(instance: AxiosInstance) {
 
       return response;
     },
-    (error: AxiosError): Promise<AxiosError> => {
+    async (error: AxiosError) => {
       const status = error.response?.status;
 
       if (DEBUG) {
@@ -80,8 +80,10 @@ export function setInterceptors(instance: AxiosInstance) {
       }
 
       if (status == 500) router.push({ path: '/500' });
-      else if (status == 403) {
-        initUser();
+      else if (status == 410) {
+        await refreshTokenVerify(error);
+      } else if (status == 403) {
+        logout();
 
         router.push({ name: 'main' });
       }

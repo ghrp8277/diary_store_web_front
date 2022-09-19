@@ -1,8 +1,4 @@
-import {
-  fetchProposalsInfo,
-  fetchStudioNoticesInfo,
-  fetchStudioNoticeInfo,
-} from '@/apis/store';
+import { fetchProposalsInfo, fetchStudioNoticesInfo } from '@/apis/store';
 import { defineStore } from 'pinia';
 import { state } from './state';
 import { getters } from './getters';
@@ -10,20 +6,21 @@ import { getters } from './getters';
 export const useStore = defineStore('store', {
   state: () => state,
   actions: {
-    async FETCH_PROPOSALS_INFO(username: string) {
-      const data = await fetchProposalsInfo(username);
+    async FETCH_PROPOSALS_INFO(username: string, page: number) {
+      const data = await fetchProposalsInfo(username, page);
 
-      this.proposalsInfo = data;
+      console.log(data);
+
+      this.proposalsInfo = data.proposals;
+
+      this.proposalPage.totalPage = data.totalPage;
     },
-    async FETCH_STUDIO_NOTICES_INFO() {
-      const data = await fetchStudioNoticesInfo();
+    async FETCH_STUDIO_NOTICES_INFO(page: number) {
+      const data = await fetchStudioNoticesInfo(page);
 
-      this.noticesInfo = data;
-    },
-    async FETCH_STUDIO_NOTICE_INFO(id: number) {
-      const data = await fetchStudioNoticeInfo(id);
+      this.noticesInfo = data.notices;
 
-      this.html = data;
+      this.noticePage.totalPage = data.totalPage;
     },
   },
   getters,

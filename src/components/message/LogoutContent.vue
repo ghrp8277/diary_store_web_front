@@ -13,28 +13,33 @@
 import { defineComponent } from '@vue/composition-api';
 import { useStore } from '@/stores/main';
 import { storeToRefs } from 'pinia';
-import { initUser } from '@/services/auth';
+import { logout } from '@/services/auth';
 import router from '@/router';
 
 export default defineComponent({
   name: 'LogoutContent',
-  setup() {
+  emits: ['closeBox'],
+  setup(props, { emit }) {
     const store = useStore();
-    const { isShow } = storeToRefs(store);
+    const { isBoxShow } = storeToRefs(store);
 
-    const closeBox = () => {
-      isShow.value = !isShow.value;
-    };
+    isBoxShow.value = true;
 
-    const confirm = () => {
-      initUser();
+    function closeBox() {
+      emit('closeBox', false);
 
-      isShow.value = !isShow.value;
+      isBoxShow.value = false;
+    }
+
+    function confirm() {
+      logout();
+
+      closeBox();
 
       router.push({
         name: 'home',
       });
-    };
+    }
 
     return {
       closeBox,

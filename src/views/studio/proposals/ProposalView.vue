@@ -50,6 +50,10 @@
         </dd>
       </dl>
     </div>
+
+    <router-link :to="{ name: 'proposals' }" tag="div" class="paging-recent">
+      <span>목록</span>
+    </router-link>
   </div>
 </template>
 
@@ -277,5 +281,22 @@ export default defineComponent({
   font-weight: bold;
   font-size: 15px;
   float: right;
+}
+
+.paging-recent {
+  text-align: center;
+
+  cursor: pointer;
+}
+
+.paging-recent > span:hover {
+  color: #ffbb1b;
+}
+
+.paging-recent > span {
+  margin: 0 40px;
+  color: #2d2e32;
+
+  font-size: 13px;
 }
 </style>

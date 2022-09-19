@@ -10,6 +10,7 @@ import {
   defineComponent,
   defineAsyncComponent,
   onMounted,
+  watch,
 } from '@vue/composition-api';
 import stores from '@/stores';
 import { storeToRefs } from 'pinia';
@@ -17,7 +18,8 @@ import { storeToRefs } from 'pinia';
 export default defineComponent({
   name: 'ProposalsView',
   setup() {
-    const { proposalsInfo } = storeToRefs(stores.store);
+    const { username } = storeToRefs(stores.main);
+    const { proposalsInfo, proposalPage } = storeToRefs(stores.store);
 
     const dynamicComponent = computed(() => {
       let name = '';
@@ -32,8 +34,18 @@ export default defineComponent({
       });
     });
 
+    watch(
+      () => proposalPage.value.page,
+      async (newVal, oldVal) => {
+        await stores.store.FETCH_PROPOSALS_INFO(username.value, newVal);
+      },
+    );
+
     onMounted(async () => {
-      await stores.store.FETCH_PROPOSALS_INFO('test');
+      await stores.store.FETCH_PROPOSALS_INFO(
+        username.value,
+        proposalPage.value.page,
+      );
     });
 
     return {

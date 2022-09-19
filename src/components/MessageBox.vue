@@ -12,18 +12,24 @@
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
+
 import { useStore } from '@/stores/main';
 import { storeToRefs } from 'pinia';
 
 export default defineComponent({
   name: 'MessageBox',
-  setup() {
+  emits: ['closeBox'],
+  setup(props, { emit }) {
     const store = useStore();
-    const { isShow } = storeToRefs(store);
+    const { isBoxShow } = storeToRefs(store);
 
-    const closeBox = () => {
-      isShow.value = !isShow.value;
-    };
+    isBoxShow.value = true;
+
+    function closeBox() {
+      emit('closeBox', false);
+
+      isBoxShow.value = false;
+    }
 
     return {
       closeBox,

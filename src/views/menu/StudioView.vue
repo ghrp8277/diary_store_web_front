@@ -30,14 +30,14 @@
       <router-view />
     </div>
 
-    <message-box v-if="isShow">
-      <logout-content slot="content" />
+    <message-box v-if="isShow" @closeBox="closeBox">
+      <logout-content slot="content" @closeBox="closeBox" />
     </message-box>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent, ref } from '@vue/composition-api';
 import stores from '@/stores';
 import { storeToRefs } from 'pinia';
 import MessageBox from '@/components/MessageBox.vue';
@@ -50,11 +50,17 @@ export default defineComponent({
     LogoutContent,
   },
   setup() {
-    const { username, isShow } = storeToRefs(stores.main);
+    const { username } = storeToRefs(stores.main);
+    const isShow = ref(false);
+
+    function closeBox(isClose: boolean) {
+      isShow.value = isClose;
+    }
 
     return {
-      isShow,
       username,
+      closeBox,
+      isShow,
     };
   },
 });

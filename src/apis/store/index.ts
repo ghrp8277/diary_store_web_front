@@ -23,17 +23,20 @@ export async function fetchEmojiUpload(
 // 승인 정보들을 가져온다.
 export async function fetchProposalsInfo(
   username: string,
-): Promise<Proposal[]> {
+  page: number,
+): Promise<{ proposals: Proposal[]; totalPage: number }> {
   const { data } = await instance.store.get(
-    `${username}/emoji/products/confirm`,
+    `${username}/emoji/${page}/products/confirm`,
   );
 
   return data;
 }
 
 // 공지사항 전체 정보를 가져온다.
-export async function fetchStudioNoticesInfo(): Promise<StudioNotice[]> {
-  const { data } = await instance.store.get(`studio/notices`);
+export async function fetchStudioNoticesInfo(
+  page: number,
+): Promise<{ notices: StudioNotice[]; totalPage: number }> {
+  const { data } = await instance.store.get(`studio/${page}/notices`);
 
   return data;
 }

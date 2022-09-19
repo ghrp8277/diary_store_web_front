@@ -7,7 +7,7 @@
       </div>
       <span class="txt-date">{{ createAtToMoment }}</span>
     </div>
-    <div class="content" v-html="htmlBind"></div>
+    <div class="content" v-html="html"></div>
 
     <router-link :to="{ name: 'notices' }" tag="div" class="paging-recent">
       <span>목록</span>
@@ -16,16 +16,10 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  onMounted,
-  toRefs,
-  computed,
-} from '@vue/composition-api';
-import stores from '@/stores';
+import { defineComponent, onMounted, toRefs, ref } from '@vue/composition-api';
 import moment from 'moment';
-import { storeToRefs } from 'pinia';
 import noticesComposable from '@/composables/notices';
+import { fetchStudioNoticeInfo } from '@/apis/store';
 
 export default defineComponent({
   name: 'NoticeView',
@@ -37,16 +31,18 @@ export default defineComponent({
   },
   setup(props) {
     const { id } = toRefs(props);
-    const { html } = storeToRefs(stores.store);
+    const html = ref('');
 
     const { is_important, createdAt, title } = noticesComposable(id.value);
 
     onMounted(async () => {
-      await stores.store.FETCH_STUDIO_NOTICE_INFO(id.value);
+      const data = await fetchStudioNoticeInfo(id.value);
+
+      html.value = data;
     });
 
     return {
-      htmlBind: computed(() => html.value),
+      html,
       is_important,
       title,
       createAtToMoment: moment(createdAt.value).format('YYYY-MM-DD'),

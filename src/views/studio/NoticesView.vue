@@ -10,6 +10,8 @@ import {
   defineAsyncComponent,
   onMounted,
   computed,
+  watch,
+  ref,
 } from '@vue/composition-api';
 import stores from '@/stores';
 import { storeToRefs } from 'pinia';
@@ -17,7 +19,7 @@ import { storeToRefs } from 'pinia';
 export default defineComponent({
   name: 'NoticesView',
   setup() {
-    const { noticesInfo } = storeToRefs(stores.store);
+    const { noticesInfo, noticePage } = storeToRefs(stores.store);
 
     const dynamicComponent = computed(() => {
       let name = '';
@@ -32,8 +34,15 @@ export default defineComponent({
       });
     });
 
+    watch(
+      () => noticePage.value.page,
+      async (newVal, oldVal) => {
+        await stores.store.FETCH_STUDIO_NOTICES_INFO(newVal);
+      },
+    );
+
     onMounted(async () => {
-      await stores.store.FETCH_STUDIO_NOTICES_INFO();
+      await stores.store.FETCH_STUDIO_NOTICES_INFO(noticePage.value.page);
     });
 
     return { dynamicComponent };
