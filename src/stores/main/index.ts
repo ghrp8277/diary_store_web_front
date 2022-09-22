@@ -13,7 +13,7 @@ export const useStore = defineStore('main', () => {
 
   const isLoading = ref(false);
 
-  const isBoxShow = ref(false);
+  const isShow = ref(false);
 
   return {
     username,
@@ -21,7 +21,7 @@ export const useStore = defineStore('main', () => {
     refreshToken,
     isLogin: computed(() => username.value.length != 0),
     isLoading,
-    isBoxShow,
+    isShow,
   };
 });
 

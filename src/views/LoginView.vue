@@ -104,7 +104,7 @@ export default defineComponent({
 
           // 메인으로 이동
           router.push({
-            name: 'studio',
+            name: 'home',
           });
         } catch (error: any) {
           if (error.status == 401) {
@@ -124,7 +124,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .login-container {
-  background-color: #717274;
+  background-color: rgb(233, 233, 233);
   height: 100%;
   min-height: 700px;
 
@@ -184,7 +184,7 @@ export default defineComponent({
 
   background: url('@/assets/logo2.png') no-repeat;
 
-  background-color: #717274;
+  background-color: #393a3e;
 
   background-position: center;
 

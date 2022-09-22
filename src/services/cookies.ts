@@ -34,3 +34,15 @@ export function getUserFromCookie() {
 export function deleteCookie(value: string) {
   document.cookie = `${value}=; expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
 }
+
+export function allDeleteCookie() {
+  const cookies = document.cookie.split('; ');
+
+  for (const [index, cookie] of cookies.entries()) {
+    const pattern = /^[^=]+/;
+
+    const value = (pattern.exec(cookie) as any[])[0];
+
+    document.cookie = `${value}=; expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+  }
+}

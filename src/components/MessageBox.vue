@@ -21,14 +21,14 @@ export default defineComponent({
   emits: ['closeBox'],
   setup(props, { emit }) {
     const store = useStore();
-    const { isBoxShow } = storeToRefs(store);
+    const { isShow } = storeToRefs(store);
 
-    isBoxShow.value = true;
+    isShow.value = true;
 
     function closeBox() {
       emit('closeBox', false);
 
-      isBoxShow.value = false;
+      isShow.value = false;
     }
 
     return {

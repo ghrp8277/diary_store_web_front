@@ -1,23 +1,19 @@
-import { deleteCookie, saveAccessTokenToCookie } from './cookies';
+import { allDeleteCookie, saveAccessTokenToCookie } from './cookies';
 import { useStore } from '@/stores/main';
 import { storeToRefs } from 'pinia';
 import axios, { AxiosError, AxiosRequestHeaders } from 'axios';
-import { fetchLogout, fetchRefreshToken } from '@/apis/user';
+import { fetchRefreshToken } from '@/apis/user';
 
-export async function logout() {
+export function logout() {
   const store = useStore();
 
   const { username, token, refreshToken } = storeToRefs(store);
-
-  await fetchLogout(refreshToken.value);
 
   username.value = '';
   token.value = '';
   refreshToken.value = '';
 
-  deleteCookie('til_access');
-  deleteCookie('til_refresh');
-  deleteCookie('til_user');
+  allDeleteCookie();
 }
 
 export async function refreshTokenVerify(error: AxiosError<unknown, any>) {

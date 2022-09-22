@@ -9,8 +9,6 @@ export const useStore = defineStore('store', {
     async FETCH_PROPOSALS_INFO(username: string, page: number) {
       const data = await fetchProposalsInfo(username, page);
 
-      console.log(data);
-
       this.proposalsInfo = data.proposals;
 
       this.proposalPage.totalPage = data.totalPage;

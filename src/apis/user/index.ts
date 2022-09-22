@@ -14,21 +14,14 @@ export async function fetchLogin(
   return data;
 }
 
-// 로그아웃
-export async function fetchLogout(token: string): Promise<void> {
-  await instance.auth.delete('logout', {
-    data: {
-      token,
-    },
-  });
-}
-
 // 토큰 검증
 export async function fetchRefreshToken(token: string): Promise<string> {
   const params = new URLSearchParams();
   params.append('token', token);
 
-  const { data } = await instance.auth.post('token', params);
+  console.log(token);
+
+  const { data } = await instance.auth.post('refresh', params);
 
   return data;
 }

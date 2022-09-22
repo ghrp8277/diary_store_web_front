@@ -95,15 +95,27 @@
           >
         </div>
 
-        <div class="image-files">
-          <div class="file-box" v-for="(file, index) in files" :key="index">
-            <div class="file-count">{{ index + 1 }}</div>
+        <ul class="image-files">
+          <li
+            class="file-box"
+            v-for="(file, index) in files"
+            :key="index"
+            @click="void 0"
+          >
+            <div class="file-count">
+              {{ index + 1 }}
+
+              <span class="btn-file-del" @click="onFileInit($event, index)"
+                >X</span
+              >
+            </div>
+            <!-- {{ file.src }} -->
             <font-awesome-icon
-              v-if="file.src.length == 0"
+              v-if="!file.src"
               class="file-icon"
               icon="fa-image"
             />
-            <img v-else class="img-emoji" :src="file.src" />
+            <img v-else class="upload-img" :src="file.src" />
             <label class="btn-file"
               >찾아보기
               <input
@@ -113,8 +125,9 @@
                 accept="image/*"
                 @change="uploadImage"
             /></label>
-          </div>
-        </div>
+            <span class="file-bg-hover"></span>
+          </li>
+        </ul>
       </div>
 
       <button class="btn-submit">제출하기</button>
@@ -140,6 +153,8 @@ import {
 import { fetchEmojiUpload } from '@/apis/store';
 import MessageBox from '@/components/MessageBox.vue';
 import MessageBoxContent from '@/components/message/MessageContent.vue';
+import { useStore } from '@/stores/main';
+import { storeToRefs } from 'pinia';
 
 export default defineComponent({
   name: 'NewEmotionView',
@@ -148,6 +163,9 @@ export default defineComponent({
     MessageBoxContent,
   },
   setup() {
+    const store = useStore();
+    const { username } = storeToRefs(store);
+
     const isShow = ref(false);
     const message = ref('');
     const files = reactive<{ src: string; file: any }[]>([]);
@@ -230,7 +248,8 @@ export default defineComponent({
     ): boolean {
       if (size1 <= cnt && size2 >= cnt) return true;
 
-      alert(`${label}을(를) ${size1} ~ ${size2}자 내로 입력해 주세요.`);
+      isShow.value = true;
+      message.value = `${label}을(를) ${size1} ~ ${size2}자 내로 입력해 주세요.`;
 
       return false;
     }
@@ -252,8 +271,6 @@ export default defineComponent({
         inputValueSizeCheck(1, 15, form_data.author_name.length, '작가명') &&
         inputValueSizeCheck(1, 200, form_data.comment.length, '이모티콘 설명')
       ) {
-        // 이미지 개수 체크
-
         const formdata = new FormData();
         formdata.append('form-data', JSON.stringify(form_data));
         files.forEach((file) => {
@@ -262,19 +279,59 @@ export default defineComponent({
 
         // 이미지 파일 개수 체크
         if (formdata.getAll('files').length > 0) {
-          await fetchEmojiUpload('test', formdata);
+          // 이미지 파일명 중복 체크
+          if (overlapFileNameCheck()) {
+            await fetchEmojiUpload(username.value, formdata);
+          } else {
+            isShow.value = true;
+            message.value =
+              '동일한 파일명을 가진 파일들은 업로드가 되지 않습니다.\n파일명을 수정하여 다시 업로드 해주세요.';
+          }
         } else {
-          alert(
-            `이미지 파일을 추가해 주세요 \n현재 선택된 이미지 파일 갯수: ${
-              formdata.getAll('files').length
-            }`,
-          );
+          isShow.value = true;
+          message.value = `이미지 파일을 추가해 주세요 \n현재 선택된 이미지 파일 갯수: ${
+            formdata.getAll('files').length
+          }`;
         }
       }
     };
 
     function closeBox(isClose: boolean) {
       isShow.value = isClose;
+    }
+
+    function onFileInit(e: InputEvent, index: number) {
+      const target = e.target as HTMLElement;
+
+      const grf_target = target.parentNode?.parentNode;
+
+      if (grf_target) {
+        const imgTarget = grf_target.querySelector(
+          '.upload-img',
+        ) as HTMLImageElement;
+        const fileTarget = grf_target.childNodes[2]
+          .childNodes[1] as HTMLInputElement;
+
+        if (imgTarget) {
+          files[index].src = '';
+          files[index].file = null;
+
+          fileTarget.value = '';
+        }
+      }
+    }
+
+    function overlapFileNameCheck() {
+      const jsonArr = files.map((element) => {
+        if (element.file) return element.file.name;
+      });
+
+      const setCollection = new Set(jsonArr);
+
+      const isDuplicate =
+        setCollection.size - 1 == jsonArr.filter((item) => item).length;
+
+      return isDuplicate;
     }
 
     const init = () => {
@@ -315,6 +372,7 @@ export default defineComponent({
       submit,
       message,
       closeBox,
+      onFileInit,
     };
   },
 });
@@ -424,6 +482,21 @@ textarea {
   padding-inline-end: 20px;
 }
 
+.btn-file-del {
+  display: none;
+  font-size: 14px;
+
+  float: right;
+
+  padding-inline-end: 13px;
+
+  transition: all 0.2s;
+}
+
+.btn-file-del:hover {
+  color: #ee565a;
+}
+
 select {
   width: calc(100% - 160px);
 
@@ -500,11 +573,15 @@ input[type='file'] {
   display: grid;
 
   grid-template-columns: repeat(6, 1fr);
+
+  padding-inline-start: 0;
+
+  margin: 0;
 }
 
 .file-box {
   width: 100%;
-  height: 130px;
+  height: 160px;
 
   border-bottom: 1px solid #e4e4e4;
 
@@ -523,22 +600,54 @@ input[type='file'] {
   border-top: 1px solid #e4e4e4;
 }
 
-.file-box:hover {
-  background-color: rgba(#717274, 0.5);
-
+.file-box:hover,
+.file-box:focus .file-box:active {
   .btn-file {
     visibility: visible;
+
+    z-index: 10;
+  }
+
+  .file-count {
+    z-index: 10;
+  }
+
+  .btn-file-del {
+    display: block;
+  }
+
+  .file-bg-hover {
+    display: block;
   }
 }
 
+.file-bg-hover {
+  display: none;
+
+  background: #2d2e32;
+
+  width: 100%;
+  height: 100%;
+
+  opacity: 0.6;
+
+  position: absolute;
+}
+
 .file-icon {
-  font-size: 25px;
+  position: absolute;
+  font-size: 30px;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
   color: gainsboro;
 }
 
-.img-emoji {
-  width: 116.66px;
-  height: 95px;
+.upload-img {
+  width: 100%;
+  height: calc(100% - 35px);
 
   top: 35px;
 
@@ -562,14 +671,19 @@ input[type='file'] {
   border: 1px solid #ffbb1b;
 
   font-size: 12px;
+  text-align: center;
 
   padding: 5px 20px;
 
   cursor: pointer;
 
   position: absolute;
-  bottom: 10px;
-  left: 13.5px;
+  left: 50%;
+  top: 85%;
+  transform: translate(-50%, -50%);
+
+  height: 15px;
+  width: 50px;
 
   visibility: hidden;
 }

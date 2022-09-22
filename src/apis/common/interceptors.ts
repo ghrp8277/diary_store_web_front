@@ -79,13 +79,23 @@ export function setInterceptors(instance: AxiosInstance) {
                   `);
       }
 
-      if (status == 500) router.push({ path: '/500' });
-      else if (status == 410) {
-        await refreshTokenVerify(error);
-      } else if (status == 403) {
-        logout();
+      console.log(status, error.message);
 
-        router.push({ name: 'main' });
+      switch (status) {
+        case 403:
+          logout();
+          router.push({ name: 'main' });
+          break;
+
+        case 410:
+          await refreshTokenVerify(error);
+          break;
+
+        case 500:
+          router.push({
+            path: '/500',
+          });
+          break;
       }
 
       endLoading();

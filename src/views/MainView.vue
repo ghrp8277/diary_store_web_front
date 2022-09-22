@@ -4,9 +4,11 @@
     <header>
       <nav class="main-nav">
         <ul class="left-items">
-          <router-link to="/home" custom v-slot="{ navigate, href }">
+          <router-link to="/home" custom v-slot="{ navigate, href }" tag="li">
             <li>
-              <a :href="href" @click="navigate">DiaryStudio</a>
+              <a :href="href" @click="navigate"
+                ><span class="logo">DiaryStudio</span></a
+              >
             </li>
           </router-link>
         </ul>
@@ -70,6 +72,7 @@ header {
 
 main {
   width: 1100px;
+  height: 100%;
   margin: 0 auto;
 
   padding-top: 60px;
@@ -90,12 +93,30 @@ main {
 // left
 .left-items {
   text-align: left;
+
+  line-height: 25px;
+
+  .logo {
+    transition: all 0.5s;
+    --webkit-text-stroke: 4px #d6f4f4;
+    font-variation-settings: 'wght' 100, 'ital' 0;
+    text-shadow: none;
+  }
+
+  .logo:hover {
+    font-variation-settings: 'wght' 900, 'ital' 1;
+
+    text-shadow: 3px 3px 0px #07bccc, 5px 5px 0px #e601c0, 7px 7px 0 #e9019a,
+      9px 9px 0 #f40468, 11px 11px 10px #482896;
+  }
 }
 
 // right
 .right-items {
   display: flex;
   justify-content: flex-end;
+
+  line-height: 25px;
 }
 
 li {
@@ -140,7 +161,7 @@ li {
 
 .slide-fade-enter-active,
 .slide-fade-leave-active {
-  transition: all 0.2s ease;
+  transition: all 0.2s ease-in-out;
 }
 
 .slide-fade-leave-to {
