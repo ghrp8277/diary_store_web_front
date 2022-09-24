@@ -13,7 +13,7 @@
           </router-link>
         </ul>
         <ul class="right-items">
-          <router-link
+          <!-- <router-link
             to="/guide"
             custom
             v-slot="{ navigate, href, isExactActive }"
@@ -21,7 +21,7 @@
             <li :class="isExactActive && 'router-link-active'">
               <a :href="href" @click="navigate">제안가이드</a>
             </li>
-          </router-link>
+          </router-link> -->
           <router-link
             to="/studio"
             custom
@@ -40,6 +40,10 @@
         <router-view />
       </transition>
     </main>
+
+    <!-- <footer>
+      <span>Copyright Diary Studio Corp.All rights resered.</span>
+    </footer> -->
   </div>
 </template>
 
@@ -78,6 +82,27 @@ main {
   padding-top: 60px;
 
   min-height: 100%;
+}
+
+footer {
+  z-index: 1;
+  background: #393a3e;
+
+  width: 100%;
+  height: 60px; /* footer의 높이 */
+  position: fixed;
+  bottom: 0;
+
+  text-align: left;
+  text-indent: 30px;
+  line-height: 57px;
+
+  span {
+    color: #6f6f6f;
+
+    font-size: 13px;
+    font-weight: 500;
+  }
 }
 
 .main-nav {

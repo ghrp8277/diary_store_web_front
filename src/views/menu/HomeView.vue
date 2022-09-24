@@ -29,6 +29,76 @@
             </h3>
           </router-link>
         </div>
+
+        <div class="info-proposal">
+          <h1>스튜디오에서 제안하고, 스토어에서 판매해보세요.</h1>
+          <h4>
+            새롭고 다양한 이모티콘이 더 많은 사용자를 만날 수 있도록 아래와 같은
+            과정을 거칩니다.
+          </h4>
+
+          <div class="info-wrap">
+            <div class="step">
+              <strong>이모티콘 제안하기</strong>
+              <h4>
+                이모티콘 시안을 제작하여 <br />상품 유형에 맞게 제안하세요.
+              </h4>
+            </div>
+            <div class="arrow-pointer"></div>
+            <div class="step">
+              <strong>이모티콘 심사</strong>
+              <h4>
+                제안을 심사하는 동안 기다려주세요. <br />(약 2주 내외 소요)
+              </h4>
+              <!-- <p>(약 2주 내외 소요)</p> -->
+            </div>
+            <div class="arrow-pointer"></div>
+            <div class="step">
+              <strong>상품화</strong>
+              <h4>심사 통과된 제안을 <br />실제 상품으로 준비합니다.</h4>
+            </div>
+            <div class="arrow-pointer"></div>
+            <div class="step">
+              <strong>출시 후 판매</strong>
+              <h4>이모티콘을 출시하고 <br />스토어에서 판매해보세요.</h4>
+            </div>
+          </div>
+        </div>
+
+        <div class="carton-box">
+          <h1>여러분의 <u>크리에이티브를</u> 펼쳐보세요</h1>
+
+          <h4>다양한 이모티콘을 자유롭게 제안할 수 있어요.</h4>
+
+          <div class="outer">
+            <div class="box">
+              <span style="--i: 1"
+                ><img :src="require(`@/assets/logo2.png`)"
+              /></span>
+              <span style="--i: 2"
+                ><img :src="require(`@/assets/logo2.png`)"
+              /></span>
+              <span style="--i: 3"
+                ><img :src="require(`@/assets/logo2.png`)"
+              /></span>
+              <span style="--i: 4"
+                ><img :src="require(`@/assets/logo2.png`)"
+              /></span>
+              <span style="--i: 5"
+                ><img :src="require(`@/assets/logo2.png`)"
+              /></span>
+              <span style="--i: 6"
+                ><img :src="require(`@/assets/logo2.png`)"
+              /></span>
+              <span style="--i: 7"
+                ><img :src="require(`@/assets/logo2.png`)"
+              /></span>
+              <span style="--i: 8"
+                ><img :src="require(`@/assets/logo2.png`)"
+              /></span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </div>
@@ -39,7 +109,6 @@ import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'HomeView',
-  components: {},
 });
 </script>
 
@@ -96,7 +165,7 @@ export default defineComponent({
   left: 0;
   top: 544px;
   z-index: 1;
-  min-height: 100%;
+  min-height: calc(100% + 544px);
   background-color: white;
 
   .top-proposal {
@@ -164,6 +233,148 @@ export default defineComponent({
         line-height: 55px;
         font-weight: bold;
         text-decoration: none;
+      }
+    }
+
+    .info-proposal {
+      width: 1100px;
+      margin: 100px auto;
+
+      .info-wrap {
+        width: 100%;
+
+        display: flex;
+        flex-wrap: nowrap;
+        align-content: space-around;
+        justify-content: center;
+
+        .step {
+          border-radius: 100%;
+
+          border: 1px solid black;
+
+          width: 150px;
+          height: 150px;
+
+          margin: 0 20px 0 30px;
+
+          position: relative;
+
+          strong {
+            position: absolute;
+
+            bottom: -40px;
+
+            text-align: center;
+
+            left: 0;
+            width: 100%;
+          }
+
+          h4 {
+            position: absolute;
+            font-weight: 400;
+            font-size: 15px;
+            top: 195px;
+            left: -30px;
+            width: calc(100% + 70px);
+
+            margin: 0;
+          }
+        }
+      }
+    }
+
+    .arrow-pointer {
+      width: 50px;
+      height: 20px;
+      background: #d9d9d9;
+      position: relative;
+      top: 65px;
+
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+
+      &:before {
+        content: '';
+        position: absolute;
+        right: -15px;
+        top: -10px;
+        width: 0;
+        height: 0;
+        border-left: 25px solid #d9d9d9;
+        border-top: 20px solid transparent;
+        border-bottom: 20px solid transparent;
+      }
+    }
+
+    .carton-box {
+      margin: 200px auto;
+      width: 1100px;
+
+      h1,
+      h4 {
+        font-weight: 400;
+
+        font-size: 26px;
+      }
+
+      h4 {
+        color: #393a3e;
+
+        font-size: 17px;
+      }
+
+      .outer {
+        width: 100%;
+        height: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        margin: 0 auto;
+      }
+
+      .box {
+        display: flex;
+        width: 100px;
+        height: 100px;
+        transform-style: preserve-3d;
+        animation: animate 50s linear infinite;
+      }
+
+      .box span {
+        border: 1px solid gray;
+        border-radius: 5%;
+        background: #f5f5f5;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        transform-origin: center;
+        transform-style: preserve-3d;
+        transform: rotateY(calc(var(--i) * 45deg)) translateZ(300px);
+        -webkit-box-reflect: below 5px
+          linear-gradient(transparent, transparent, #0004);
+      }
+
+      .box span img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      @keyframes animate {
+        0% {
+          transform: perspective(1000px) rotateY(0deg);
+        }
+        100% {
+          transform: perspective(1000px) rotateY(360deg);
+        }
       }
     }
   }

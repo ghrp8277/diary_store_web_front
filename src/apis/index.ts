@@ -17,8 +17,7 @@ function createInstanceWithAuth(url: string) {
 
   setAxiosSetting(instance);
 
-  // return setInterceptors(instance);
-  return instance;
+  return setInterceptors(instance);
 }
 
 export const instance = {

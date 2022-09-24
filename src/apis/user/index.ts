@@ -10,7 +10,7 @@ export async function fetchLogin(
   params.append('password', password);
 
   const { data } = await instance.auth.post('signin', params, {
-    withCredentials: true,
+    // withCredentials: true,
   });
 
   return data;

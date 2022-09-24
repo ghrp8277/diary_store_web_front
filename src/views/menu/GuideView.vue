@@ -14,45 +14,21 @@
         </em>
         프로세스
       </strong>
-
-      <div class="outer">
-        <div class="box">
-          <span style="--i: 1"
-            ><img :src="require(`@/assets/logo2.png`)"
-          /></span>
-          <span style="--i: 2"
-            ><img :src="require(`@/assets/logo2.png`)"
-          /></span>
-          <span style="--i: 3"
-            ><img :src="require(`@/assets/logo2.png`)"
-          /></span>
-          <span style="--i: 4"
-            ><img :src="require(`@/assets/logo2.png`)"
-          /></span>
-          <span style="--i: 5"
-            ><img :src="require(`@/assets/logo2.png`)"
-          /></span>
-          <span style="--i: 6"
-            ><img :src="require(`@/assets/logo2.png`)"
-          /></span>
-          <span style="--i: 7"
-            ><img :src="require(`@/assets/logo2.png`)"
-          /></span>
-          <span style="--i: 8"
-            ><img :src="require(`@/assets/logo2.png`)"
-          /></span>
-        </div>
-      </div>
     </div>
+
+    <swipe-card />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api';
+import SwipeCard from '@/components/SwipeCard.vue';
 
 export default defineComponent({
   name: 'GuideView',
-  components: {},
+  components: {
+    SwipeCard,
+  },
 });
 </script>
 
@@ -116,54 +92,6 @@ export default defineComponent({
     --stroke: var(#275efe);
     --stroke-delay: 0.1s;
     --offset: 180px;
-  }
-}
-
-.outer {
-  width: 100%;
-  height: 400px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.box {
-  display: flex;
-  width: 200px;
-  height: 200px;
-  transform-style: preserve-3d;
-  animation: animate 50s linear infinite;
-}
-
-.box span {
-  border: 1px solid gray;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  transform-origin: center;
-  transform-style: preserve-3d;
-  transform: rotateY(calc(var(--i) * 45deg)) translateZ(400px);
-  -webkit-box-reflect: below 5px
-    linear-gradient(transparent, transparent, #0004);
-}
-
-.box span img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-@keyframes animate {
-  0% {
-    transform: perspective(1000px) rotateY(0deg);
-  }
-  100% {
-    transform: perspective(1000px) rotateY(360deg);
   }
 }
 </style>
