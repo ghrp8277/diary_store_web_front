@@ -8,13 +8,17 @@ import axios, {
 import router from '@/router';
 import { useStore } from '@/stores/main';
 import { storeToRefs } from 'pinia';
-import { logout, refreshTokenVerify } from '@/services/auth';
+import { logout } from '@/services/auth';
+import {
+  getAccessFromCookie,
+  saveAccessTokenToCookie,
+} from '@/services/cookies';
 
 const DEBUG = process.env.NODE_ENV === 'development';
 
 export function setInterceptors(instance: AxiosInstance) {
   const store = useStore();
-  const { token, isLoading } = storeToRefs(store);
+  const { token, isLoading, username, refreshToken } = storeToRefs(store);
 
   const startLoading = () => {
     isLoading.value = true;
@@ -69,7 +73,7 @@ export function setInterceptors(instance: AxiosInstance) {
       return response;
     },
     async (error: AxiosError) => {
-      const status = error.response?.status;
+      const status = error.response?.status as number;
 
       if (DEBUG) {
         console.error(`
@@ -79,28 +83,42 @@ export function setInterceptors(instance: AxiosInstance) {
                   `);
       }
 
-      console.log(status, error.message);
+      // if (status === 410) {
+      //   const params = new URLSearchParams();
+      //   params.append('username', username.value);
 
-      switch (status) {
-        case 403:
-          logout();
-          router.push({ name: 'main' });
-          break;
+      //   const response = await axios
+      //     .post(`${process.env.VUE_APP_API_BASE_URL}auth/refresh`, params, {
+      //       withCredentials: true,
+      //       headers: {
+      //         Authorization: refreshToken.value,
+      //       },
+      //     })
+      //     .catch((error) => {
+      //       endLoading();
 
-        case 410:
-          await refreshTokenVerify(error);
-          break;
+      //       return Promise.reject(error);
+      //     });
 
-        case 500:
-          router.push({
-            path: '/500',
-          });
-          break;
-      }
+      //   if (response && response.data) {
+      //     saveAccessTokenToCookie(response.data);
 
+      //     token.value = response.data;
+
+      //     const config = error.response?.config as AxiosRequestConfig;
+      //     const headers = config?.headers as AxiosRequestHeaders;
+
+      //     headers.Authorization = `Bearer ${token.value}`;
+
+      //     endLoading();
+
+      //     await instance(config);
+      //   }
+      // } else {
       endLoading();
 
       return Promise.reject(error.response);
+      // }
     },
   );
 

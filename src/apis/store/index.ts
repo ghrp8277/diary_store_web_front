@@ -25,6 +25,7 @@ export async function fetchProposalsInfo(
   username: string,
   page: number,
 ): Promise<{ proposals: Proposal[]; totalPage: number }> {
+  console.log(page, username);
   const { data } = await instance.store.get(
     `${username}/emoji/${page}/products/confirm`,
   );

@@ -1,5 +1,5 @@
 export function saveAccessTokenToCookie(token: string) {
-  document.cookie = `til_access=${token}`;
+  document.cookie = `til_access=${token}; path=/`;
 }
 
 export function saveRefreshTokenToCookie(token: string) {

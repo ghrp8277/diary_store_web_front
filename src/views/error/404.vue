@@ -1,8 +1,20 @@
 <template>
-  <div class="center">
-    <h1>404</h1>
+  <div class="error-container">
+    <p class="zoom-area">
+      <b>페이지를 찾을 수 없어요.</b>
+      올바른 URL을 입력하셨는지 확인해주세요.
+    </p>
+    <section class="error-container">
+      <span><span>4</span></span>
+      <span>0</span>
+      <span><span>4</span></span>
+    </section>
 
-    <p>PAGE NOT FOUND.</p>
+    <div class="link-container">
+      <router-link to="/" class="more-link">
+        <span>메인화면으로</span>
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -17,81 +29,140 @@ export default defineComponent({
 });
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-html,
-body {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  background: #242424;
-  font-family: 'Oswald', sans-serif;
-  background: -webkit-canvas(noise);
-  overflow: hidden;
+.error-container {
+  text-align: center;
+  font-size: 180px;
+  font-weight: 800;
+  margin: 20px 15px;
 }
-html::after {
-  content: '';
-  background: radial-gradient(circle, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+
+.error-container > span {
+  display: inline-block;
+  line-height: 0.7;
+  position: relative;
+  color: #ffb485;
 }
-.center {
-  height: 400px;
-  width: 500px;
-  position: absolute;
-  top: calc(50% - 200px);
-  left: calc(50% - 250px);
+
+.error-container > span > span {
+  display: inline-block;
+  position: relative;
+}
+
+.error-container > span:nth-of-type(1) {
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
+  color: #f0e395;
+}
+
+.error-container > span:nth-of-type(1) > span {
+  transform-origin: 50% 100% 0px;
+  transform: rotateX(0);
+  animation: easyoutelastic 8s infinite;
+}
+
+.error-container > span:nth-of-type(3) {
+  perspective: none;
+  perspective-origin: 50% 50%;
+  color: #d15c95;
+}
+
+.error-container > span:nth-of-type(3) > span {
+  transform-origin: 100% 100% 0px;
+  transform: rotate(0deg);
+  animation: rotatedrop 8s infinite;
+}
+
+@keyframes easyoutelastic {
+  0% {
+    transform: rotateX(0);
+  }
+  9% {
+    transform: rotateX(210deg);
+  }
+  13% {
+    transform: rotateX(150deg);
+  }
+  16% {
+    transform: rotateX(200deg);
+  }
+  18% {
+    transform: rotateX(170deg);
+  }
+  20% {
+    transform: rotateX(180deg);
+  }
+  60% {
+    transform: rotateX(180deg);
+  }
+  80% {
+    transform: rotateX(0);
+  }
+  100% {
+    transform: rotateX(0);
+  }
+}
+
+@keyframes rotatedrop {
+  0% {
+    transform: rotate(0);
+  }
+  10% {
+    transform: rotate(30deg);
+  }
+  15% {
+    transform: rotate(90deg);
+  }
+  70% {
+    transform: rotate(90deg);
+  }
+  80% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotateX(0);
+  }
+}
+
+h1 {
+  text-align: center;
+  margin: 30px 15px;
+}
+
+.zoom-area {
+  max-width: 490px;
+  margin: 30px auto 30px;
+  font-size: 19px;
+  text-align: center;
+
+  color: #ffb485;
+}
+
+.zoom-area > b {
+  color: #d15c95;
+}
+
+.link-container {
   text-align: center;
 }
-h1,
-p {
-  margin: 0;
-  padding: 0;
-  -webkit-animation: funnytext 4s ease-in-out infinite;
-  animation: funnytext 4s ease-in-out infinite;
+
+.more-link:hover {
+  background: rgba(55, 55, 55, 0.2);
 }
-h1 {
-  font-size: 16rem;
-  color: rgba(0, 0, 0, 0.3);
-  -webkit-filter: blur(3px);
-  filter: blur(3px);
-}
-p {
-  font-size: 2rem;
-  color: rgba(0, 0, 0, 0.6);
-}
-body::after,
-body::before {
-  content: ' ';
-  display: block;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: -4px;
-  height: 4px;
-  -webkit-animation: scanline 8s linear infinite;
-  animation: scanline 8s linear infinite;
-  opacity: 0.33;
-  background: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0),
-      rgba(0, 0, 0, 0.5) 90%,
-      rgba(0, 0, 0, 0)
-    ),
-    -webkit-canvas(noise);
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0),
-    rgba(0, 0, 0, 0.5) 90%,
-    rgba(0, 0, 0, 0)
-  );
-}
-body::before {
-  -webkit-animation-delay: 4s;
-  animation-delay: 4s;
+
+a.more-link {
+  text-transform: uppercase;
+  font-size: 13px;
+  background-color: #bbb;
+  padding: 10px 15px;
+  border-radius: 0;
+  color: #fff;
+  display: inline-block;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  line-height: 1.5;
+  text-decoration: none;
+  margin-top: 50px;
+  letter-spacing: 1px;
 }
 </style>

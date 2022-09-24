@@ -9,7 +9,9 @@ export async function fetchLogin(
   params.append('username', username);
   params.append('password', password);
 
-  const { data } = await instance.auth.post('signin', params);
+  const { data } = await instance.auth.post('signin', params, {
+    withCredentials: true,
+  });
 
   return data;
 }
@@ -18,8 +20,6 @@ export async function fetchLogin(
 export async function fetchRefreshToken(token: string): Promise<string> {
   const params = new URLSearchParams();
   params.append('token', token);
-
-  console.log(token);
 
   const { data } = await instance.auth.post('refresh', params);
 

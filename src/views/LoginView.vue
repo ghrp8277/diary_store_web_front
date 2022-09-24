@@ -1,6 +1,33 @@
 <template>
   <div class="login-container">
+    <div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+    </div>
+
     <div class="login-card">
+      <div
+        class="square"
+        style="--i: 0; left: -60px; top: -50px; width: 100px; height: 100px"
+      ></div>
+      <div
+        class="square"
+        style="--i: 1; left: -100px; top: 150px; width: 120px; height: 120px"
+      ></div>
+      <div
+        class="square"
+        style="--i: 2; right: -50px; bottom: -60px; width: 80px; height: 80px"
+      ></div>
+      <div
+        class="square"
+        style="--i: 3; left: 100px; width: 50px; height: 50px; bottom: -80px"
+      ></div>
+      <div
+        class="square"
+        style="--i: 4; top: -80px; left: 140px; width: 60px; height: 60px"
+      ></div>
+
       <div class="login-form">
         <form @submit.prevent="onSubmit">
           <h2 class="form-title">
@@ -23,6 +50,9 @@
               autocomplete="off"
               placeholder="비밀번호"
             />
+            <span @click="onToggle">
+              <font-awesome-icon id="toggler" :icon="icon" />
+            </span>
           </div>
 
           <div class="login-message">
@@ -73,8 +103,23 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const message = ref('');
+    const icon = ref('fa-eye');
 
     const { username, token, refreshToken, isLoading } = storeToRefs(store);
+
+    function onToggle() {
+      const password = document.getElementById('password') as HTMLInputElement;
+
+      if (password.type == 'password') {
+        password.setAttribute('type', 'text');
+
+        icon.value = 'fa-eye-slash';
+      } else {
+        password.setAttribute('type', 'password');
+
+        icon.value = 'fa-eye';
+      }
+    }
 
     async function onSubmit(e: Event) {
       const target = e.target as HTMLFormElement;
@@ -117,14 +162,25 @@ export default defineComponent({
       }
     }
 
-    return { onSubmit, message };
+    return { onSubmit, message, onToggle, icon };
   },
 });
 </script>
 
 <style lang="scss" scoped>
 .login-container {
-  background-color: rgb(233, 233, 233);
+  background: linear-gradient(
+    315deg,
+    rgba(101, 0, 94, 1) 3%,
+    rgba(60, 132, 206, 1) 38%,
+    rgba(48, 238, 226, 1) 68%,
+    rgba(255, 25, 25, 1) 98%
+  );
+  animation: gradient 15s ease infinite;
+  background-attachment: fixed;
+  background-size: 400% 400%;
+  overflow: auto;
+  margin: auto;
   height: 100%;
   min-height: 700px;
 
@@ -132,6 +188,92 @@ export default defineComponent({
 
   justify-content: center;
   align-items: center;
+
+  position: relative;
+}
+
+.square {
+  position: absolute;
+
+  border-radius: 10px;
+  backdrop-filter: blur(5px);
+  background: rgba(255, 255, 255, 0.1);
+  animation-delay: calc(-1s * var(--i));
+  animation: animate 10s linear infinite;
+
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@keyframes animate {
+  0%,
+  100% {
+    transform: translateX(-40px);
+  }
+  50% {
+    transform: translateY(40px);
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+.wave {
+  background: rgb(255 255 255 / 25%);
+
+  border-radius: 1000% 1000% 0 0;
+  position: fixed;
+
+  width: 200%;
+  height: 12em;
+
+  animation: wave 10s -3s linear infinite;
+
+  transform: translate3d(0, 0, 0);
+
+  opacity: 0.8;
+  bottom: 0;
+  left: 0;
+}
+.wave:nth-of-type(2) {
+  bottom: -1.25em;
+  animation: wave 18s linear reverse infinite;
+  opacity: 0.8;
+}
+
+.wave:nth-of-type(3) {
+  bottom: -2.5em;
+  animation: wave 20s -1s reverse infinite;
+  opacity: 0.9;
+}
+
+@keyframes wave {
+  2% {
+    transform: translateX(1);
+  }
+  25% {
+    transform: translateX(-25%);
+  }
+  50% {
+    transform: translateX(-50%);
+  }
+  75% {
+    transform: translateX(-25%);
+  }
+  100% {
+    transform: translateX(1);
+  }
 }
 
 .login-card {
@@ -141,10 +283,17 @@ export default defineComponent({
   width: 80vw;
   max-width: 1000px;
 
-  background: #e4e4e4;
-  border: 1px solid rgba(0, 0, 0, 0.75);
+  background: rgba(255, 255, 255, 0.1);
+
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+
   border-radius: 5px;
-  box-shadow: -1px 4px 28px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 25px 45px rgba(0, 0, 0, 0.1);
 
   display: flex;
 
@@ -167,6 +316,10 @@ export default defineComponent({
     width: 500px;
     height: 600px;
   }
+
+  .square {
+    display: none;
+  }
 }
 
 @media screen and (max-width: 500px) {
@@ -177,6 +330,10 @@ export default defineComponent({
     border-radius: 0;
     border: none;
   }
+
+  .square {
+    display: none;
+  }
 }
 
 .login-img {
@@ -184,7 +341,7 @@ export default defineComponent({
 
   background: url('@/assets/logo2.png') no-repeat;
 
-  background-color: #393a3e;
+  background-color: rgba(#393a3e, 0.9);
 
   background-position: center;
 
@@ -207,6 +364,8 @@ form > .form-title {
 .form-item {
   display: flex;
   margin-bottom: 10px;
+
+  position: relative;
 }
 
 .form-item > input {
@@ -341,6 +500,19 @@ button {
   margin: 20px;
 
   background: #717274;
+}
+
+input::placeholder {
+  color: #717274;
+  font-weight: bold;
+}
+
+#toggler {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
 }
 
 .slide-fade-enter-active {
