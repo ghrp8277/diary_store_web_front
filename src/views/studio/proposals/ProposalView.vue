@@ -110,6 +110,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.proposal {
+  position: relative;
+}
 .create-at {
   width: 100%;
   text-align: left;
@@ -284,13 +287,23 @@ export default defineComponent({
 }
 
 .paging-recent {
+  position: absolute;
   text-align: center;
+  border: 1px solid #ffbb1b;
+  width: 200px;
+  height: 40px;
 
   cursor: pointer;
+  transform: translateX(-50%);
+  left: 50%;
+  bottom: -100px;
+
+  background: #efc706;
+  display: table;
 }
 
 .paging-recent > span:hover {
-  color: #ffbb1b;
+  color: #6d6d6d;
 }
 
 .paging-recent > span {
@@ -298,5 +311,7 @@ export default defineComponent({
   color: #2d2e32;
 
   font-size: 13px;
+  display: table-cell;
+  vertical-align: middle;
 }
 </style>

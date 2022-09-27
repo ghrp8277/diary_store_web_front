@@ -70,7 +70,7 @@
 
           <h4>다양한 이모티콘을 자유롭게 제안할 수 있어요.</h4>
 
-          <!-- <div class="outer">
+          <div class="outer">
             <div class="box">
               <span style="--i: 1"
                 ><img :src="require(`@/assets/logo2.png`)"
@@ -97,7 +97,7 @@
                 ><img :src="require(`@/assets/logo2.png`)"
               /></span>
             </div>
-          </div> -->
+          </div>
         </div>
       </div>
     </section>
@@ -125,7 +125,8 @@ export default defineComponent({
   z-index: 0;
   width: 100%;
   min-width: 1100px;
-  height: 500px;
+  // height: 500px;
+  height: 100%;
   padding-top: 130px;
   background-color: #393a3e;
 
@@ -163,17 +164,16 @@ export default defineComponent({
   position: absolute;
   width: 100%;
   left: 0;
-  top: 544px;
+  top: 500px;
   z-index: 1;
-  // min-height: calc(100% + 544px);
   min-height: 100%;
-  background-color: white;
 
   .top-proposal {
     position: absolute;
     left: 0;
     right: 0;
     top: -10px;
+    background: white;
 
     .inner-proposal {
       width: 1100px;
@@ -239,7 +239,8 @@ export default defineComponent({
 
     .info-proposal {
       width: 1100px;
-      margin: 100px auto;
+      margin: 0 auto;
+      padding-top: 100px;
 
       .info-wrap {
         width: 100%;
@@ -311,6 +312,8 @@ export default defineComponent({
 
     .carton-box {
       margin: 0 auto;
+
+      padding-top: 200px;
       width: 1100px;
 
       h1,

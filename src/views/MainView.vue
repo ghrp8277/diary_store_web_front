@@ -41,9 +41,9 @@
       </transition>
     </main>
 
-    <!-- <footer>
+    <footer>
       <span>Copyright Diary Studio Corp.All rights resered.</span>
-    </footer> -->
+    </footer>
   </div>
 </template>
 
@@ -91,7 +91,8 @@ footer {
   width: 100%;
   height: 60px; /* footer의 높이 */
   position: fixed;
-  bottom: 0;
+  left: 0;
+  bottom: -60px;
 
   text-align: left;
   text-indent: 30px;

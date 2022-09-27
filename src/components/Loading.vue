@@ -1,8 +1,8 @@
 <template>
   <div class="box">
+    <!-- <div class="ring"></div>
     <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
+    <div class="ring"></div> -->
     <div class="loading">
       <span>L</span>
       <span>O</span>
@@ -42,11 +42,11 @@ export default defineComponent({
 
   text-indent: 10px;
 
-  position: absolute;
-  top: 0;
-  left: -100px;
+  // position: absolute;
+  // top: 0;
+  // left: -100px;
 
-  width: 200px;
+  width: 300px;
 }
 
 .loading span {
