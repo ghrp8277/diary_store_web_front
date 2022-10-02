@@ -6,7 +6,6 @@
     <loading v-if="isLoading" />
 
     <div class="cursor"></div>
-    <div class="cursor2"></div>
   </div>
 </template>
 
@@ -28,40 +27,30 @@ export default defineComponent({
 
     onMounted(() => {
       const cursor = document.querySelector('.cursor') as HTMLElement;
-      const cursorinner = document.querySelector('.cursor2') as HTMLElement;
 
       function onMouseMove(e: MouseEvent) {
         let x = e.clientX;
         let y = e.clientY;
 
-        cursor.style.transform = `translate3d(calc(${x}px - 50%), calc(${y}px - 50%), 0)`;
-
-        cursorinner.style.left = x + 'px';
-        cursorinner.style.top = y + 'px';
+        cursor.style.left = x + 'px';
+        cursor.style.top = y + 'px';
       }
 
       function onMouseDown(e: MouseEvent) {
         cursor.classList.add('click');
-        cursorinner.classList.add('cursorinnerhover');
       }
 
       function onMouseUp(e: MouseEvent) {
         cursor.classList.remove('click');
-        cursorinner.classList.remove('cursorinnerhover');
       }
 
       function onMouseLeave(e: MouseEvent) {
         cursor.style.display = 'none';
-        cursorinner.style.display = 'none';
       }
 
       function onMouseOver(e: MouseEvent) {
-        if (
-          cursor.style.display == 'none' &&
-          cursorinner.style.display == 'none'
-        ) {
+        if (cursor.style.display == 'none') {
           cursor.style.display = 'block';
-          cursorinner.style.display = 'block';
         }
       }
 
@@ -128,23 +117,6 @@ body {
 
 // cursor
 .cursor {
-  width: 20px;
-  height: 20px;
-  border-radius: 100%;
-  border: 1px solid black;
-  transition: all 200ms ease-out;
-  position: fixed;
-  pointer-events: none;
-
-  left: 0;
-  top: 0;
-
-  transform: translate(calc(-50% + 15px), -50%);
-
-  z-index: 99999;
-}
-
-.cursor2 {
   width: 10px;
   height: 10px;
   border-radius: 100%;
@@ -157,14 +129,9 @@ body {
   z-index: 99999;
 }
 
-.cursorinnerhover {
-  width: 20px;
-  height: 20px;
-}
-
 .click {
-  background: rgba(red, 0.2);
-  width: 10px;
-  height: 10px;
+  background: rgba(red, 0.4);
+  width: 8px;
+  height: 8px;
 }
 </style>

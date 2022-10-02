@@ -13,15 +13,15 @@
           </router-link>
         </ul>
         <ul class="right-items">
-          <!-- <router-link
-            to="/guide"
+          <router-link
+            to="/faq"
             custom
             v-slot="{ navigate, href, isExactActive }"
           >
             <li :class="isExactActive && 'router-link-active'">
-              <a :href="href" @click="navigate">제안가이드</a>
+              <a :href="href" @click="navigate">FAQ</a>
             </li>
-          </router-link> -->
+          </router-link>
           <router-link
             to="/studio"
             custom
@@ -36,9 +36,7 @@
     </header>
     <!-- 본문 내용 -->
     <main>
-      <transition name="slide-fade" mode="out-in">
-        <router-view />
-      </transition>
+      <router-view />
     </main>
 
     <footer>
@@ -178,20 +176,5 @@ li {
 
 .right-items li:hover::after {
   width: 100%;
-}
-
-.slide-fade-enter {
-  transform: translateX(10px);
-  opacity: 0;
-}
-
-.slide-fade-enter-active,
-.slide-fade-leave-active {
-  transition: all 0.2s ease-in-out;
-}
-
-.slide-fade-leave-to {
-  transform: translateX(-10px);
-  opacity: 0;
 }
 </style>

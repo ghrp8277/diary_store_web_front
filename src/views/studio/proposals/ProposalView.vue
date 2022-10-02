@@ -287,7 +287,7 @@ export default defineComponent({
 }
 
 .paging-recent {
-  position: absolute;
+  position: relative;
   text-align: center;
   border: 1px solid #ffbb1b;
   width: 200px;
@@ -296,7 +296,6 @@ export default defineComponent({
   cursor: pointer;
   transform: translateX(-50%);
   left: 50%;
-  bottom: -100px;
 
   background: #efc706;
   display: table;

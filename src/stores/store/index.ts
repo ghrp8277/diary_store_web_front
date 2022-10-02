@@ -22,12 +22,12 @@ export const useStore = defineStore('store', {
     },
   },
   getters,
-  persist: {
-    storage: sessionStorage,
-    key: 'proposalsInfo',
-    paths: ['proposalsInfo'],
-    afterRestore: (ctx) => {
-      console.log(`just restored '${ctx.store.$id}'`);
-    },
-  },
+  // persist: {
+  //   storage: sessionStorage,
+  //   key: 'proposalsInfo',
+  //   paths: ['proposalsInfo'],
+  //   afterRestore: (ctx) => {
+  //     console.log(`just restored '${ctx.store.$id}'`);
+  //   },
+  // },
 });

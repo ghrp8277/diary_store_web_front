@@ -38,9 +38,9 @@ const routes: Array<RouteConfig> = [
         component: () => import('@/views/menu/HomeView.vue'),
       },
       {
-        path: 'guide',
-        name: 'guide',
-        component: () => import('@/views/menu/GuideView.vue'),
+        path: 'faq',
+        name: 'faq',
+        component: () => import('@/views/menu/FAQView.vue'),
       },
       {
         path: 'studio',
@@ -59,6 +59,11 @@ const routes: Array<RouteConfig> = [
     path: '/login',
     name: 'login',
     component: () => import('@/views/LoginView.vue'),
+  },
+  {
+    path: '/signup',
+    name: 'signup',
+    component: () => import('@/views/SignUpView.vue'),
   },
   {
     path: '*',

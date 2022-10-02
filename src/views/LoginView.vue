@@ -78,7 +78,7 @@
 
         <hr class="line" />
 
-        <button class="btn-signup">
+        <button class="btn-signup" @click="$router.push({ name: 'signup' })">
           <span>회원가입</span>
         </button>
       </div>

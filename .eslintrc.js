@@ -28,5 +28,6 @@ module.exports = {
         printWidth: 80,
       },
     ],
+    'no-useless-escape': 'off',
   },
 };
