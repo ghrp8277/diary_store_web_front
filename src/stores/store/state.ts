@@ -1,3 +1,4 @@
+import { EmojiCategory } from '@/types/emojiCategory';
 import { Proposal } from '@/types/proposal';
 import { StudioNotice } from '@/types/studioNotice';
 

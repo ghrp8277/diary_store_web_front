@@ -2,6 +2,8 @@ import { Proposal } from '@/types/proposal';
 import router from '@/router';
 import { StudioNotice } from '@/types/studioNotice';
 import { instance } from '@/apis';
+import { EmojiCategory } from '@/types/emojiCategory';
+import { EmojiTag } from '@/types/emojiTag';
 
 // 이모티콘 파일 업로드
 export async function fetchEmojiUpload(
@@ -18,6 +20,21 @@ export async function fetchEmojiUpload(
   });
 
   if (status == 201) router.push({ name: 'success', query: data });
+}
+
+// 카테고리 정보를 가져온다.
+export async function fetchCategoriesInfo(): Promise<EmojiCategory[]> {
+  const { data } = await instance.store.get('category');
+
+  return data;
+}
+
+export async function fetchTagInfo(
+  category_value: string,
+): Promise<EmojiTag[]> {
+  const { data } = await instance.store.get(`tag/${category_value}`);
+
+  return data;
 }
 
 // 승인 정보들을 가져온다.

@@ -1,4 +1,8 @@
-import { fetchProposalsInfo, fetchStudioNoticesInfo } from '@/apis/store';
+import {
+  fetchCategoriesInfo,
+  fetchProposalsInfo,
+  fetchStudioNoticesInfo,
+} from '@/apis/store';
 import { defineStore } from 'pinia';
 import { state } from './state';
 import { getters } from './getters';

@@ -28,26 +28,49 @@
         <div class="form-item">
           <label for="category">이모티콘 카테고리 <span>●</span></label>
 
-          <select id="category" name="category" @change="onChange">
+          <select
+            v-model="select_category"
+            id="category"
+            name="category"
+            @change="onChange"
+          >
             <option value="" disabled selected>카테고리 선택</option>
-            <option value="animal">동물</option>
-            <option value="character">인물</option>
-            <option value="illustration">일러스트</option>
+            <option
+              v-for="(category, index) in categories"
+              :key="index"
+              :value="category.category_value"
+            >
+              {{ category.category_name }}
+            </option>
           </select>
         </div>
 
-        <div class="form-item">
+        <div class="form-item" style="position: relative">
           <label for="tag">이모티콘 태그<span>●</span></label>
           <input
             id="tag"
             name="tag"
             type="text"
-            placeholder="태그를 1~15자 내로 입력해 주세요."
+            v-model="select_tags"
+            placeholder="최소 1개, 최대 3개의 태그를 선택해 주세요."
+            @focus="isTagFocus = true"
             :disabled="isTagDisabled"
+            readonly
+          />
+
+          <tag-box
+            v-if="isTagFocus"
+            @onSelectTag="onSelectTag"
+            @onTagMessage="onTagMessage"
+            @onClear="onClear"
+            :category_value="select_category"
           />
         </div>
 
-        <div class="form-item">
+        <div
+          class="form-item"
+          :style="[isTagFocus ? { 'margin-top': '40px' } : {}]"
+        >
           <label for="author-name">작가명<span>●</span></label>
           <input
             id="author-name"
@@ -145,32 +168,44 @@
 
 <script lang="ts">
 import {
+  computed,
   defineComponent,
   onMounted,
   reactive,
   ref,
+  watch,
 } from '@vue/composition-api';
 import { fetchEmojiUpload } from '@/apis/store';
 import MessageBox from '@/components/MessageBox.vue';
+import TagBox from '@/components//TagBox.vue';
 import MessageBoxContent from '@/components/message/MessageContent.vue';
-import { useStore } from '@/stores/main';
+import stores from '@/stores';
 import { storeToRefs } from 'pinia';
+import { EmojiTag } from '@/types/emojiTag';
+import { EmojiCategory } from '@/types/emojiCategory';
+import { fetchCategoriesInfo } from '@/apis/store';
 
 export default defineComponent({
   name: 'NewEmotionView',
   components: {
     MessageBox,
     MessageBoxContent,
+    TagBox,
   },
   setup() {
-    const store = useStore();
-    const { username } = storeToRefs(store);
+    const { username } = storeToRefs(stores.main);
 
     const isShow = ref(false);
     const message = ref('');
     const files = reactive<{ src: string; file: any }[]>([]);
     const commentCnt = ref(0);
     const isTagDisabled = ref(true);
+
+    const categories = ref<EmojiCategory[]>([]);
+    const select_category = ref('');
+    const select_tags = ref('');
+    const tags = ref<EmojiTag[]>([]);
+    const isTagFocus = ref(false);
 
     // 이미지 사이즈 체크
     const imageSizeCheck = async (result: string) => {
@@ -334,7 +369,30 @@ export default defineComponent({
       return isDuplicate;
     }
 
-    const init = () => {
+    function onSelectTag(tag: EmojiTag) {
+      select_tags.value = select_tags.value.concat(`#${tag.tag_name}`);
+
+      tags.value.push(tag);
+    }
+
+    function onTagMessage(result: string) {
+      isShow.value = true;
+      message.value = result;
+    }
+
+    function onClear(isAllClear: boolean) {
+      if (isAllClear) {
+        select_tags.value = '';
+
+        tags.value.length = 0;
+      }
+    }
+
+    async function init() {
+      const data = await fetchCategoriesInfo();
+
+      categories.value = data;
+
       //  files 데이터 초기화
       for (let i = 0; i < 18; i++) {
         files.push({
@@ -342,7 +400,7 @@ export default defineComponent({
           file: null,
         });
       }
-    };
+    }
 
     onMounted(() => {
       init();
@@ -373,6 +431,14 @@ export default defineComponent({
       message,
       closeBox,
       onFileInit,
+
+      categories,
+      select_category,
+      isTagFocus,
+      onSelectTag,
+      select_tags,
+      onTagMessage,
+      onClear,
     };
   },
 });
