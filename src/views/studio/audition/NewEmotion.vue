@@ -52,7 +52,7 @@
             name="tag"
             type="text"
             v-model="select_tags"
-            placeholder="최소 1개, 최대 3개의 태그를 선택해 주세요."
+            placeholder="제시된 태그 중 1개의 태그를 선택해 주세요."
             @focus="isTagFocus = true"
             :disabled="isTagDisabled"
             readonly
@@ -132,7 +132,6 @@
                 >X</span
               >
             </div>
-            <!-- {{ file.src }} -->
             <font-awesome-icon
               v-if="!file.src"
               class="file-icon"
@@ -208,7 +207,7 @@ export default defineComponent({
     const isTagFocus = ref(false);
 
     // 이미지 사이즈 체크
-    const imageSizeCheck = async (result: string) => {
+    async function imageSizeCheck(result: string) {
       let img = new Image();
       img.src = result;
 
@@ -227,10 +226,10 @@ export default defineComponent({
       }
 
       return await onloadPromise();
-    };
+    }
 
     // 이미지 미리보기
-    const readImage = (file: File, index: number, target: HTMLInputElement) => {
+    function readImage(file: File, index: number, target: HTMLInputElement) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = (e) => {
@@ -251,10 +250,10 @@ export default defineComponent({
           });
         }
       };
-    };
+    }
 
     // 이미지 업로드
-    const uploadImage = (e: InputEvent) => {
+    function uploadImage(e: InputEvent) {
       e.preventDefault();
       const target = e.target as HTMLInputElement;
 
@@ -273,7 +272,7 @@ export default defineComponent({
           readImage(file, index, target);
         }
       }
-    };
+    }
 
     function inputValueSizeCheck(
       size1 = 1,
@@ -289,7 +288,7 @@ export default defineComponent({
       return false;
     }
 
-    const submit = async (e: Event) => {
+    async function submit(e: Event) {
       const target = e.target as HTMLFormElement;
 
       const form_data = {
@@ -329,7 +328,7 @@ export default defineComponent({
           }`;
         }
       }
-    };
+    }
 
     function closeBox(isClose: boolean) {
       isShow.value = isClose;
@@ -385,6 +384,8 @@ export default defineComponent({
         select_tags.value = '';
 
         tags.value.length = 0;
+
+        tags.value = [];
       }
     }
 

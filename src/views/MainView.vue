@@ -58,7 +58,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .container {
-  height: 100%;
+  height: calc(100% - 67px);
 }
 
 header {

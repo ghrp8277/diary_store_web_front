@@ -12,6 +12,7 @@ import { logout } from '@/services/auth';
 import {
   getAccessFromCookie,
   saveAccessTokenToCookie,
+  allDeleteCookie,
 } from '@/services/cookies';
 
 const DEBUG = process.env.NODE_ENV === 'development';
@@ -81,6 +82,18 @@ export function setInterceptors(instance: AxiosInstance) {
                       [mappedServiceUrl] [${error.response?.config.url}]
                       [responseStatusCode] [${error.response?.status}]
                   `);
+      }
+
+      if (status === 410) {
+        username.value = '';
+        token.value = '';
+        refreshToken.value = '';
+
+        allDeleteCookie();
+
+        router.push({
+          name: 'login',
+        });
       }
 
       // if (status === 410) {

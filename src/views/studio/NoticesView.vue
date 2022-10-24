@@ -1,5 +1,5 @@
 <template>
-  <div class="notices" v-if="dynamicComponent">
+  <div class="notices" v-if="dynamicComponent && !isLoading">
     <component :is="dynamicComponent" />
   </div>
 </template>
@@ -20,6 +20,7 @@ export default defineComponent({
   name: 'NoticesView',
   setup() {
     const { noticesInfo, noticePage } = storeToRefs(stores.store);
+    const isLoading = ref(false);
 
     const dynamicComponent = computed(() => {
       let name = '';
@@ -42,10 +43,14 @@ export default defineComponent({
     );
 
     onMounted(async () => {
+      isLoading.value = true;
+
       await stores.store.FETCH_STUDIO_NOTICES_INFO(noticePage.value.page);
+
+      isLoading.value = false;
     });
 
-    return { dynamicComponent };
+    return { dynamicComponent, isLoading };
   },
 });
 </script>

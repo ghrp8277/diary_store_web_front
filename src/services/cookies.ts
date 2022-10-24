@@ -3,11 +3,11 @@ export function saveAccessTokenToCookie(token: string) {
 }
 
 export function saveRefreshTokenToCookie(token: string) {
-  document.cookie = `til_refresh=${token}`;
+  document.cookie = `til_refresh=${token}; path=/`;
 }
 
 export function saveUserToCookie(username: string) {
-  document.cookie = `til_user=${username}`;
+  document.cookie = `til_user=${username}; path=/`;
 }
 
 export function getAccessFromCookie() {

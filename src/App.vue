@@ -10,7 +10,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onMounted } from '@vue/composition-api';
+import {
+  defineComponent,
+  computed,
+  onMounted,
+  onUnmounted,
+} from '@vue/composition-api';
 import Loading from '@/components/Loading.vue';
 import { useStore } from '@/stores/main';
 import { storeToRefs } from 'pinia';

@@ -10,6 +10,8 @@
         <span>#{{ tag.tag_name }}</span>
       </li>
     </ul>
+
+    <span class="clear" @click="onTagClear">X</span>
   </div>
 </template>
 
@@ -37,7 +39,7 @@ export default defineComponent({
     const { category_value } = toRefs(props);
 
     const tags = ref<EmojiTag[]>([]);
-    let count = 3;
+    let count = 1;
 
     function generateRandomColor() {
       let randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
@@ -62,6 +64,16 @@ export default defineComponent({
       }
     }
 
+    async function onTagClear() {
+      const data = await fetchTagInfo(category_value.value);
+
+      tags.value = data;
+
+      emit('onClear', true);
+
+      count = 1;
+    }
+
     watch(
       () => category_value.value,
       async (newVal) => {
@@ -71,7 +83,7 @@ export default defineComponent({
 
         emit('onClear', true);
 
-        count = 3;
+        count = 1;
       },
     );
 
@@ -85,6 +97,7 @@ export default defineComponent({
       tags,
       generateRandomColor,
       selectTag,
+      onTagClear,
     };
   },
 });
@@ -148,5 +161,28 @@ export default defineComponent({
       }
     }
   }
+}
+
+.clear {
+  position: absolute;
+
+  right: 10px;
+
+  bottom: 7px;
+
+  border-radius: 50%;
+
+  border: 1px solid #e4e4e4;
+  background: #f1f1f1;
+
+  width: 15px;
+  height: 15px;
+
+  font-size: 11px;
+
+  line-height: 15px;
+  text-indent: 4px;
+
+  cursor: pointer;
 }
 </style>

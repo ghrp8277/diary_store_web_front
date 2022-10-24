@@ -61,7 +61,7 @@
             </transition>
           </div>
 
-          <div class="item-check">
+          <!-- <div class="item-check">
             <input type="checkbox" class="inp_g" />
 
             <label class="lab_g" for="staySignedIn">
@@ -69,7 +69,7 @@
                 >로그인 상태 유지</span
               >
             </label>
-          </div>
+          </div> -->
 
           <button type="submit" id="connect" class="btn-signin">
             <span>로그인</span>
@@ -95,6 +95,7 @@ import {
   saveAccessTokenToCookie,
   saveRefreshTokenToCookie,
   saveUserToCookie,
+  allDeleteCookie,
 } from '@/services/cookies';
 import { useStore } from '@/stores/main';
 import { storeToRefs } from 'pinia';

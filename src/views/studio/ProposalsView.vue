@@ -1,5 +1,5 @@
 <template>
-  <div v-if="dynamicComponent">
+  <div v-if="dynamicComponent && !isLoading">
     <component :is="dynamicComponent" />
   </div>
 </template>
@@ -11,6 +11,7 @@ import {
   defineAsyncComponent,
   onMounted,
   watch,
+  ref,
 } from '@vue/composition-api';
 import stores from '@/stores';
 import { storeToRefs } from 'pinia';
@@ -20,6 +21,8 @@ export default defineComponent({
   setup() {
     const { username } = storeToRefs(stores.main);
     const { proposalsInfo, proposalPage } = storeToRefs(stores.store);
+
+    const isLoading = ref(false);
 
     const dynamicComponent = computed(() => {
       let name = '';
@@ -42,14 +45,19 @@ export default defineComponent({
     );
 
     onMounted(async () => {
+      isLoading.value = true;
+
       await stores.store.FETCH_PROPOSALS_INFO(
         username.value,
         proposalPage.value.page,
       );
+
+      isLoading.value = false;
     });
 
     return {
       dynamicComponent,
+      isLoading,
     };
   },
 });
