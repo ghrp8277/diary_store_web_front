@@ -22,10 +22,10 @@
           <h5>멈춰있는 이모티콘 제안가이드</h5>
 
           <dl class="list-guide">
-            <dt>총 15종</dt>
+            <dt>총 18종</dt>
             <dd>
               <span class="txt-guide"
-                >PNG <em class="emph-guide">15종</em> (투명배경)</span
+                >PNG <em class="emph-guide">18종</em> (투명배경)</span
               >
             </dd>
           </dl>

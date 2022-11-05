@@ -312,7 +312,7 @@ export default defineComponent({
         });
 
         // 이미지 파일 개수 체크
-        if (formdata.getAll('files').length > 0) {
+        if (formdata.getAll('files').length >= 18) {
           // 이미지 파일명 중복 체크
           if (overlapFileNameCheck()) {
             await fetchEmojiUpload(username.value, formdata);
