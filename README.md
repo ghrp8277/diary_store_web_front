@@ -9,6 +9,7 @@
   1. Vue JS
   2. Typescript
   3. Pinia
+  4. Axios
 ------------
 * ## 기능 설명
   > 제안할 이모티콘 18종 선택 후 제안 
