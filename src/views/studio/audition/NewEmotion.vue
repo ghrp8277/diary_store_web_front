@@ -261,16 +261,26 @@ export default defineComponent({
         const index = parseInt(target.name);
         const file = target.files[0];
 
+        // 파일 확장자 체크
+        if (file.type.search('png') < 1) {
+          isShow.value = true;
+          message.value = `파일 확장자가 PNG가 아닙니다.`;
+
+          return 0;
+        }
+
         // 파일 크기 체크
         if (1024 * 150 < file.size) {
           isShow.value = true;
           message.value = `${file.name} 이미지 크기가 너무 큽니다. 최대 이미지 크기는 150kb 입니다.`;
           // file reset
           target.value = '';
-        } else {
-          // 이미지 미리보기 설정
-          readImage(file, index, target);
+
+          return 0;
         }
+
+        // 이미지 미리보기 설정
+        readImage(file, index, target);
       }
     }
 
