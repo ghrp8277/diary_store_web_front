@@ -21,4 +21,6 @@ npm run lint
 ```
 
 ### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+* 다이어리 스튜디오
+다이어리 스튜디오 [Diary Studio](http://leejehyeon.synology.me:8888)
+Cancel changes
