@@ -11,6 +11,7 @@
   3. Pinia
   4. Axios
   5. FontAwesome
+  6. composition-api
 ------------
 * ## 기능 설명
   > 이모티콘 제안자가 되어 스토어에 등록할 이모티콘을 제안할 수 있는 페이지
